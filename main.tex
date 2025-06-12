@@ -1,6 +1,8 @@
 \documentclass[aps,pre,superscriptaddress]{revtex4}
-
+\usepackage{xcolor}
 \usepackage{preamble}
+\usepackage{color}
+\usepackage{verbatim}
 \graphicspath{ {./figures} }
 
 \begin{document}
@@ -21,9 +23,6 @@ See the preprint~\cite{Park25-02}.
 
 We used 122 networks --- 120 networks from the Netzschleuder network catalogue~\cite{Netzschleuder} and two other networks from ~\cite{Park24-11}.
 The networks range in size, from 11 to 13,989,436 nodes, and 13 to 117,185,083 edges.
-
-On two networks (libimseti and epinions), the analysis did not work? 
-Need to check this, maybe rerun (blank output file?).
 
 \section{Nested-SBM on Empirical Networks}
 
@@ -61,7 +60,7 @@ Need to check this, maybe rerun (blank output file?).
 	% 	\includegraphics[width=0.8\textwidth]{fig3c.pdf}
 	% \end{subfloat}
 	\caption{Connectivity of Hierarchical-SBM Clusters.
-		On the non-bipartite empirical networks (86).
+		On the non-bipartite empirical networks (85).
 		Each bar is a network, sorted in increasing network size.
 		The y-axis shows percentage disconnected, poorly-connected $\setminus$ disconnected, and well-connected
 		(a) Level0 (b) Level1}
@@ -79,8 +78,10 @@ Need to check this, maybe rerun (blank output file?).
 		\includegraphics[width=0.4\textwidth]{fig4b.pdf}
 	\end{subfloat}
 	\caption{Connectivity Comparison:
-		On the non-bipartite empirical networks (86).
-		We calculate the percentage of disconnected clusters and compare with the hierarchical (left) and the non-hierarchical (right).
+		On the non-bipartite empirical networks (85).
+            The x-axis indicates the method.
+            Left: Proportion of clusters that are disconnected.
+            Right: Proportion of clusters that are poorly-connected (including disconnected).
 	}
 	\label{figs:fig3}
 \end{figure}
@@ -88,10 +89,246 @@ Need to check this, maybe rerun (blank output file?).
 On average, the best layer by itself (via description length) is Layer 0 (Figure \ref{figs:fig1}).
 Moreover, on all the 120 empirical networks (except for petster), the layer with the lowest description length (compared to the other layers) is Layer 0 --- on petster, it was layer 4 (out of 10 layers).
 
-Conducting a paired t-test of disconnected percentages, there is no statistical difference between disconnected percentage (p = 0.5264).
-However, comparing the poorly-connected percentage, there is a statistical difference (p = 0.0193).
+We conducted paired t-tests to test whether there are differences in the connectivity between nested and flat degree-corrected SBM models.
+Where is no statistical difference between the percentage of disconnected clusters (p = 0.5264), but there was a difference in the well-connected proportions (p = 0.0193), with flat having better connectivity.
 
 \section{PySBM}
+
+Datasets (10 smallest in the medium list, by node count -- 906 to 2115 nodes):
+empirical: 
+\begin{verbatim}
+dnc,uni_email,polblogs,faa_routes,netscience,new_zealand_collab
+,collins_yeast,interactome_stelzl,bible_nouns,at_migrations    
+\end{verbatim}
+
+synthetic: EC-SBM with the Leiden+Mod clustering based on each of the empirical datasets
+
+Procedure:
+1. Calculate the "chosen SBM" on each dataset
+    - Run graph-tool DC-SBM, Non-DC-SBM, PP-SBM
+    - Find the one with the minimum description length
+    - Extract the number of clusters
+2. Run PySBM on each dataset
+    - Run (9) SBM variants from the PySBM paper: SKN, DCKN, ICLexJ, ICLexU, SNR, DCNR, SPC, DCPU, DCPUH
+    - Run (3) inference algorithms from the PySBM paper: MHA 250k, PAH, KL-EM
+3. Find cluster statistics
+4. On synthetic, also calculate NMI, ARI, AMI, AGRI, RNMI
+
+Empirical figures:
+1. Cluster Connectivity: Box plot counting the disconnected proportions.
+    - (a): x-axis is the (9) pysbm SBM variant + (1) graph-tool: y-axis is the proportion -- each data point is a network averaged across the 3 inference algorithms
+    - (b): x-axis is the (3) pysbm algorithms + (1) graph-tool:  y-axis is the proportion -- each data point is a network averaged across the 9 sbm variants
+2. Runtime: Box-Plot
+    - (a): x-axis is the (3) pysbm algorithms + (1) graph-tool
+    - (b): y-axis is the seconds, log scale
+    - So, box summarizes 10 data points (for each network, averaged across the 9 sbm variants)
+
+Synthetic figures:
+1. Cluster Connectivity: Box plot counting the disconnected proportions.
+    - Same as the empirical figure.
+2. Cluster Accuracy: array of (5) box-plots
+    - One plot for each of the (5) metrics
+    - x-axis: the (3) inference algorithms  + (1) graph-tool
+    - y-axis: the score -- each data point is a network averaged across (9) sbm variants
+
+The pysbm also ran 10 replicates for each method, randomizing the initial partition.
+We will just run 1 replicate for now.
+
+
+\begin{figure}[!htpb]
+\centering
+\includegraphics[]{figures/accuracy_box.pdf}
+\caption[]{\textbf{Clustering accuracy on LFR and RECCS synthetic networks}  Each subfigure shows the results on five different clustering accuracy metrics (NMI, ARI, AGRI, RMI, and AMI). The biggest differences in accuracies come from ARI, AGRI, and RMI, where chosen SBM + WCC has the best accuracy followed by chosen SBM and then hierarchical SBM. On NMI and AMI, although there may be a slight advantage to using chosen SBM + WCC, the accuracy differences across the different methods were small.}
+\label{fig:synthetic-accuracy}
+\end{figure}
+
+\begin{figure}[!htpb]
+\centering
+\includegraphics[]{figures/conn_box.pdf}
+\caption[]{\textbf{Proportion of disconnected clusters produced by Hierarchical SBM and Chosen SBM on synthetic LFR and RECCS networks}  We see that hierarchical SBM tends to produce clusterings with higher proportions of disconnectd clusters than chosen SBM on these synthetic networks.}
+\label{fig:synthetic-connectivity}
+\end{figure}
+%Minhyuk: write down how many networks 
+
+\begin{figure}[!htpb]
+\centering
+\includegraphics[]{figures/accuracy_choose_lower.pdf}
+\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Analysis on the Youtube Graph with Varying Ground-truth Cluster Inclusion Thresholds (keep lowest cluster id)} Here we show the results obtained by clustering the Youtube graph with chosen SBM+WCC, Leiden optimizing for modularity and processed with CM and WCC, and Leiden optimizing for CPM at r=0.01 and processed with CM and WCC. Only those ground-truth clusters with size greater than 10 was used. If a node had multiple memberships, it was assigned to the cluster with the smallest cluster id and stripped of its membership in all other clusters, thus making the ground-truth clustering disjoint. Each ground-truth cluster in the Youtube graph was assigned a noise score computed by the ratio of its external degree to total degree. For all sub figures, the x-axis marks the threshold such that only those ground-truth clusters with noise level less than the threshold is included. Consequently, clustering accuracies such as NMI, ARI, AGRI, RMI, and AMI are only computed on the reduced set of ground-truth clusters, ignoring any nodes not part of those clusters. Figure at the top left shows how many nodes remain in the set of ground-truth clusters following this thresholding step. Figure out the bottom left shows the distribution of cluster noise at different thresholds. The subfigures on the right show the clustering accuracies of all methods against each of the ground-truths thresholded at 0.1, 0.2, ..., 1.0. }
+\label{fig:youtube-accuracy-choose-lower}
+\end{figure}
+
+\begin{figure}[!htpb]
+\centering
+\includegraphics[]{figures/accuracy_remove_overlap.pdf}
+\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Analysis on the Youtube Graph with Varying Ground-truth Cluster Inclusion Thresholds (remove overlap cluster id)} Here we show the results obtained by clustering the Youtube graph with chosen SBM+WCC, Leiden optimizing for modularity and processed with CM and WCC, and Leiden optimizing for CPM at r=0.01 and processed with CM and WCC. Only those ground-truth clusters with size greater than 10 was used. If a node had multiple memberships, it was simply removed from the ground-truth clustering, thus making the ground-truth clustering disjoint. Each ground-truth cluster in the Youtube graph was assigned a noise score computed by the ratio of its external degree to total degree. For all sub figures, the x-axis marks the threshold such that only those ground-truth clusters with noise level less than the threshold is included. Consequently, clustering accuracies such as NMI, ARI, AGRI, RMI, and AMI are only computed on the reduced set of ground-truth clusters, ignoring any nodes not part of those clusters. Figure at the top left shows how many nodes remain in the set of ground-truth clusters following this thresholding step. Figure out the bottom left shows the distribution of cluster noise at different thresholds. The subfigures on the right show the clustering accuracies of all methods against each of the ground-truths thresholded at 0.1, 0.2, ..., 1.0. }
+\label{fig:youtube-accuracy-remove-overlap}
+\end{figure}
+
+\begin{figure}[!htpb]
+\centering
+\includegraphics[]{figures/youtube_ground_truth_stats.pdf}
+\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Empirical Statistics on Youtube Ground-truth Clusterings} We show the distributions over all the non-singleton clusters of conductance, modularity, normalized mincut size, density, and mixing parameter for the two different ways of creating a disjoint ground-truth partition for the ground-truth clusters of the Youtube graph. Density here is calculated by $\frac{2m}{n(n-1)}$ where $m$ is the number of edges inside the cluster and $n$ is the number of nodes inside the cluster. Mixing parameter here is computed by dividing the sum of external degree by sum of total degree over all nodes in a cluster. The ground-truth clusters, for both ways of processing the original ground-truth clustering, exhibit high conductance, low modularity, low normalized mincut sizes, low density, and high mixing parameters, indicating that the ground-truth clusters don't have good separability, are sparse, and have poor internal connectivity. High conductance and mixing parameter indicate low separability, low modularity and density indicate high sparsity, and low normalized mincut sizes indicate poor connectivity.}
+\label{fig:youtube-ground-truth-stats}
+\end{figure}
+
+\begin{figure}[!htpb]
+\centering
+\includegraphics[]{figures/choose_lower_youtube_sbm_accuracy.pdf}
+\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of SBM and SBM-WCC} Only showing SBM vs SBM-WCC. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
+\label{fig:choose-lower-sbm}
+\end{figure}
+
+\begin{figure}[!htpb]
+\centering
+\includegraphics[]{figures/choose_lower_youtube_leiden_mod_accuracy.pdf}
+\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of Leiden optimizing for modularity and its treatments} Only showing Leiden-mod vs Leiden-mod+WCC vs Leiden-mod+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
+\label{fig:choose-lower-leiden-mod}
+\end{figure}
+
+
+\begin{figure}[!htpb]
+\centering
+\includegraphics[]{figures/choose_lower_youtube_leiden_cpm_accuracy.pdf}
+\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of Leiden optimizing for CPM and its treatments}Only showing Leiden-CPM(r=0.01) vs Leiden-CPM(r=0.01)+WCC vs Leiden-CPM(r=0.01)+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
+\label{fig:choose-lower-leiden-cpm}
+\end{figure}
+
+\begin{figure}[!htpb]
+\centering
+\includegraphics[]{figures/remove_overlap_youtube_sbm_accuracy.pdf}
+\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of SBM and SBM-WCC} Only showing SBM vs SBM-WCC. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
+\label{fig:remove-overlap-sbm}
+\end{figure}
+
+\begin{figure}[!htpb]
+\centering
+\includegraphics[]{figures/remove_overlap_youtube_leiden_mod_accuracy.pdf}
+\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of Leiden optimizing for modularity and its treatments} Only showing Leiden-mod vs Leiden-mod+WCC vs Leiden-mod+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
+\label{fig:remove-overlap-leiden-mod}
+\end{figure}
+
+
+\begin{figure}[!htpb]
+\centering
+\includegraphics[]{figures/remove_overlap_youtube_leiden_cpm_accuracy.pdf}
+\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of Leiden optimizing for CPM and its treatments}Only showing Leiden-CPM(r=0.01) vs Leiden-CPM(r=0.01)+WCC vs Leiden-CPM(r=0.01)+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
+\label{fig:remove-overlap-leiden-cpm}
+\end{figure}
+
+\clearpage
+\section{Formulas for cluster statistics}
+Let $V$ be the set of all nodes in the network, $E$ be the set of all edges in the network, and $C$ be the mapping of node IDs to clusters IDs.
+
+Assume that all edges are undirected and are only defined by two vertices $v_{i}$ and $v_{j}$, written as $e_{ij}$ so $e_{ij} = e_{ji}$.
+
+The degree of a node $v_{i}$ is computed by $|\{e_{ij} :v_{i},v_{j} \in V \text{ and } i \neq j\}|$
+
+All of the following calculations are done for a given cluster $c$ which is the set of nodes $\{v_{i} : C(v_{i}) = c\}$.
+
+The sum of all node degrees in cluster $c$ is $k_{c} = \sum_{v_{i} \in c}{degree(v_{i})}$
+
+Similarly, we can define $k_{c_{in}} = 2|\{e_{ij} : v_{i} \in c \text{ and } v_{j} \in c \text{ and } i \neq j\}|$ and $k_{c_{out}} = |\{e_{ij} : v_{i} \in c \text { and } v_{j} \notin c \text{ and } i \neq j\}|$
+
+% $E_{cut}=\{e_{ij} : v_{i}\in c \text{ and } v_{j} \notin c \ \text{ and } i \neq j\}$
+
+
+
+
+
+\vspace{.1in}
+\textcolor{red}{Tandy's comments follow. }
+
+\begin{itemize}
+
+    \item It seems that $E_{cut}$ is exactly the same as $k_{c\_out}$. If so, just use one term and not the other.
+    \item It looks like the denominator in Noise is exactly the same as $k_c$.
+    \item Tandy;s comments about conductance are probably wrong. Ignore this. 
+    'm looking right now at a definition for Conductance in another paper, see Section 2.1 in \url{http://snap.stanford.edu/class/cs224w-2018/reports/CS224W-2018-50.pdf}.    \textcolor{blue}{Min writes:I don't think by definition $k_{c} \leq |E|$ holds true since $k_{c}$ is upper-bounded by $2|E|$. We are double counting edges when summing the degree per node. I also put two subsections below that show that these two formulas end up giving the same numbers. I'm not confident that I didn't make any mistakes but intuitively I feel that $A(S)=k_{S}$ since both of them are counting the number of edges per node in $S$.}
+    \item The definition of mixing parameter that you are using is not standard.  You are defining this term in order to have a way of talking about the ``mixing parameter of a cluster", but a different definition might be better. We can discuss.
+    But given the definition, it looks to be exactly the same as Noise. 
+    Consider instead just writing down the distribution of individual mixing parameters of the nodes that are in the cluster. 
+    That distribution can be then combined to 
+    get the distribution of individual mixing 
+    parameters for the clusters being considered.
+\end{itemize}.
+
+
+
+\subsection{Conductance}
+A cluster $c$ defines a cut in which on one side of the cut is $c$ and the other side of the cut is $V \setminus c$. Therefore, the number of edges crossing the cut is simply $k_{c_{out}}$.
+
+
+\begin{equation}
+Conductance(c) = \frac{k_{c_{out}}}{min(k_{c}, 2|E|-k_{c})}
+\end{equation}
+
+\subsubsection{Derivation of $A(S)$}
+$A_{ij}$ is 1 if there is an edge between $v_{i}$ and $v_{j}$ and 0 otherwise since our input networks are considered unweighted.
+
+\begin{align}
+A(S) &= \sum_{i \in S,j\in V}{A_{ij}} \\
+&= \sum_{v_{i} \in S}{|{e_{ij} : v_{i} \in S \text{ and } v_{j} \in V \text { and } i \neq j}|} \\
+&= \sum_{v_{i} \in S}{degree(v_{i})}
+\end{align}
+
+\subsubsection{Derivation of $A(\overline{S})$}
+$A_{ij}$ is 1 if there is an edge between $v_{i}$ and $v_{j}$ and 0 otherwise since our input networks are considered unweighted.
+
+\begin{align}
+A(\overline{S}) &= \sum_{i \in \overline{S},j\in V}{A_{ij}} \\
+&= \sum_{v_{i} \in \overline{S}}{|{e_{ij} : v_{i} \in \overline{S} \text{ and } v_{j} \in V \text { and } i \neq j}|} \\
+&= \sum_{v_{i} \in \overline{S}}{degree(v_{i})} \\
+&= 2|E| - \sum_{v_{i} \in S}{degree(v_{i})} 
+\end{align}
+
+
+\subsection{Noise}
+
+\begin{equation}
+Noise = \frac{k_{c\_out}}{k_{c}}
+\end{equation}
+
+\subsection{Mixing parameter}
+Quickly quoting LFR, ``2 Each node shares a fraction 1-$\mu$ of its links with the other nodes of its community and a fraction $\mu$ with the other nodes of the network; $\mu$ is the mixing parameter.''
+
+The internal degree of a node $v_{i} \in c$ is $k_{v_{i}\_{in}}=|\{e_{ij} :v_{j} \in c \text{ and } i \neq j|$
+
+The external degree of a node $v_{i} \in c$ is $k_{v_{i}\_{out}}=|\{e_{ij} :v_{j} \notin c |$
+
+\begin{equation}
+MixingParameter(v_{i}) = \frac{k_{v_{i}\_out}}{k_{v_{i}\_in} + k_{v_{i}\_out}}
+\end{equation}
+
+\subsection{Density}
+\begin{equation}
+Density=\frac{|\{e_{ij} : v_{i},v_{j} \in c \text{ and } i \neq j\}|}{{|N|\choose 2}}
+\end{equation}
+
+\subsection{Normalized mincut size}
+\begin{equation}
+NormalizedMincutSize=\frac{MincutSize}{\log_{10}{|c|}}
+\end{equation}
+  % def conductance(self, graph):
+  %       num = self.get_border_edges(graph)
+  %       deg_sum = sum(graph.degree(v) for v in self.nodeset)
+  %       den = min(deg_sum, 2*graph.m() - deg_sum)
+  %       if den == 0:
+  %           # 1. singlenode cluster
+  %           # 2. entire graph is one cluster
+  %           # 3. cluster has no intracluster edges
+  %           return -42
+  %       return num/den
+
+% \begin{figure}[!htpb]
+% \centering
+% \includegraphics[]{}
+% \caption[]{\textbf{}}
+% \label{fig:}
+% \end{figure}
+
+
+
+
 
 \clearpage
 \bibliography{refs}
