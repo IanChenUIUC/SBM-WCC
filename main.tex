@@ -24,6 +24,8 @@ See the preprint~\cite{Park25-02}.
 We used 122 networks --- 120 networks from the Netzschleuder network catalogue~\cite{Netzschleuder} and two other networks from ~\cite{Park24-11}.
 The networks range in size, from 11 to 13,989,436 nodes, and 13 to 117,185,083 edges.
 
+We used graph-tool~\cite{graph-tool} to optimize for minimum description length (MDL) of the degree-corrected flat and nested models.
+
 \section{Nested-SBM on Empirical Networks}
 
 \begin{figure}
@@ -92,7 +94,32 @@ Moreover, on all the 120 empirical networks (except for petster), the layer with
 We conducted paired t-tests to test whether there are differences in the connectivity between nested and flat degree-corrected SBM models.
 Where is no statistical difference between the percentage of disconnected clusters (p = 0.5264), but there was a difference in the well-connected proportions (p = 0.0193), with flat having better connectivity.
 
-\section{PySBM}
+\section{Other SBMs}
+
+Here, we give a brief overview of other SBM models and inference algorithms, and investigate their runtime and connectivity.
+See ~\cite{funke19-04} for a more in-depth discussion of the variants that does not mention connectivity nor runtime.
+
+\subsection*{Models}
+
+The main variants of SBM are the degree corrected and non-degree corrected SBM models for flat and also hierachical.
+Here, we use the microcanonical formulation~\cite{peixoto17-01}~\cite{peixoto14-03}.
+In addition, closed formulas have been derived that speed up the calculation of the likelihood function by including the number of blocks~\cite{come15-12}.
+
+Finally, there are SBM models that specialize on disassociative structures in bipartite graphs~\cite{yen20-09}.
+Since this is a subclass of the other models, here we do not investigate it further.
+
+\subsection*{Inference Algorithms}
+
+Inferring the number of blocks and optimizing the partition given a number of blocks is difficult to do exactly.
+Above, we investigated Peixoto's Agglomerative Heuristic~\cite{peixoto14-01}, which starts with a set of singleton clusters and merges them.
+In addition, there is the Kernighan-Lin algorithm~\cite{kernighan70-02} which starts with a random partition and does a local search through node moves.
+
+TODO: something about dcd
+
+\subsection*{Results}
+
+graph-tool most scalable?
+do all models have disconnected problem?
 
 Datasets (10 smallest in the medium list, by node count -- 906 to 2115 nodes):
 empirical: 

@@ -48,6 +48,202 @@
                 tool for well-connected clusters.},
     number = {3},
 }
-@misc{Netzschleuder, 
-    title={Netzschleuder}, url={https://networks.skewed.de/}, journal={Netzschleuder: the network catalogue, repository and centrifuge}, author={Peixoto, Tiago de Paula}} 
+@misc{Netzschleuder,
+    title = {Netzschleuder},
+    url = {https://networks.skewed.de/},
+    journal = {Netzschleuder: the network catalogue, repository and centrifuge},
+    author = {Peixoto, Tiago de Paula},
+}
+
+@misc{graph-tool,
+    title = {graph-tool},
+    journal = {Netzschleuder: the graph-tool python library},
+    author = {Peixoto, Tiago de Paula},
+    year = {2014},
+    doi = {doi:10.6084/m9.figshare.1164194},
+}
+@article{peixoto17-01,
+    title = "Nonparametric Bayesian inference of the microcanonical stochastic
+             block model",
+    author = "Peixoto, Tiago P",
+    journal = "Phys. Rev. E.",
+    publisher = "American Physical Society (APS)",
+    volume = 95,
+    number = 1,
+    month = jan,
+    year = 2017,
+    copyright = "http://link.aps.org/licenses/aps-default-license",
+    language = "en",
+}
+
+@article{peixoto14-03,
+    title = "Hierarchical block structures and high-resolution model selection
+             in large networks",
+    author = "Peixoto, Tiago P",
+    journal = "Phys. Rev. X.",
+    publisher = "American Physical Society (APS)",
+    volume = 4,
+    number = 1,
+    month = mar,
+    year = 2014,
+    copyright = "http://creativecommons.org/licenses/by/3.0/",
+    language = "en",
+}
+@article{come15-12,
+    title = "Model selection and clustering in stochastic block models based on
+             the exact integrated complete data likelihood",
+    author = "C{\^o}me, Etienne and Latouche, Pierre",
+    abstract = "The stochastic block model (SBM) is a mixture model for the
+                clustering of nodes in networks. The SBM has now been employed
+                for more than a decade to analyze very different types of
+                networks in many scientific fields, including biology and the
+                social sciences. Recently, an analytical expression based on the
+                collapsing of the SBM parameters has been proposed, in
+                combination with a sampling procedure that allows the clustering
+                of the vertices and the estimation of the number of clusters to
+                be performed simultaneously. Although the corresponding algorithm
+                can technically accommodate up to 10 000 nodes and millions of
+                edges, the Markov chain, however, tends to exhibit poor mixing
+                properties, that is, low acceptance rates, for large networks.
+                Therefore, the number of clusters tends to be highly
+                overestimated, even for a very large number of samples. In this
+                article, we rely on a similar expression, which we call the
+                integrated complete data log likelihood, and propose a greedy
+                inference algorithm that focuses on maximizing this exact
+                quantity. This algorithm incurs a smaller computational cost than
+                existing inference techniques for the SBM and can be employed to
+                analyze large networks (several tens of thousands of nodes and
+                millions of edges) with no convergence problems. Using toy
+                datasets, the algorithm exhibits improvements over existing
+                strategies, both in terms of clustering and model selection. An
+                application to a network of blogs related to illustrations and
+                comics is also provided.",
+    journal = "Stat. Modelling",
+    publisher = "SAGE Publications",
+    volume = 15,
+    number = 6,
+    pages = "564--589",
+    month = dec,
+    year = 2015,
+    language = "en",
+}
+@article{yen20-09,
+    title = "Community detection in bipartite networks with stochastic block
+             models",
+    author = "Yen, Tzu-Chi and Larremore, Daniel B",
+    abstract = "In bipartite networks, community structures are restricted to
+                being disassortative, in that nodes of one type are grouped
+                according to common patterns of connection with nodes of the
+                other type. This makes the stochastic block model (SBM), a highly
+                flexible generative model for networks with block structure, an
+                intuitive choice for bipartite community detection. However,
+                typical formulations of the SBM do not make use of the special
+                structure of bipartite networks. Here we introduce a Bayesian
+                nonparametric formulation of the SBM and a corresponding
+                algorithm to efficiently find communities in bipartite networks
+                which parsimoniously chooses the number of communities. The biSBM
+                improves community detection results over general SBMs when data
+                are noisy, improves the model resolution limit by a factor of
+                sqrt[2], and expands our understanding of the complicated
+                optimization landscape associated with community detection tasks.
+                A direct comparison of certain terms of the prior distributions
+                in the biSBM and a related high-resolution hierarchical SBM also
+                reveals a counterintuitive regime of community detection problems
+                , populated by smaller and sparser networks, where
+                nonhierarchical models outperform their more flexible
+                counterpart.",
+    journal = "Phys. Rev. E.",
+    publisher = "American Physical Society (APS)",
+    volume = 102,
+    number = "3-1",
+    pages = "032309",
+    month = sep,
+    year = 2020,
+    copyright = "https://link.aps.org/licenses/aps-default-license",
+    language = "en",
+}
+@article{peixoto14-01,
+    title = "Efficient Monte Carlo and greedy heuristic for the inference of
+             stochastic block models",
+    author = "Peixoto, Tiago P",
+    abstract = "We present an efficient algorithm for the inference of
+                stochastic block models in large networks. The algorithm can be
+                used as an optimized Markov chain Monte Carlo (MCMC) method, with
+                a fast mixing time and a much reduced susceptibility to getting
+                trapped in metastable states, or as a greedy agglomerative
+                heuristic, with an almost linear O(Nln2N) complexity, where N is
+                the number of nodes in the network, independent of the number of
+                blocks being inferred. We show that the heuristic is capable of
+                delivering results which are indistinguishable from the more
+                exact and numerically expensive MCMC method in many artificial
+                and empirical networks, despite being much faster. The method is
+                entirely unbiased towards any specific mixing pattern, and in
+                particular it does not favor assortative community structures.",
+    journal = "Phys. Rev. E Stat. Nonlin. Soft Matter Phys.",
+    publisher = "American Physical Society (APS)",
+    volume = 89,
+    number = 1,
+    pages = "012804",
+    month = jan,
+    year = 2014,
+    copyright = "http://link.aps.org/licenses/aps-default-license",
+    language = "en",
+}
+@article{kernighan70-02,
+    title = "An efficient heuristic procedure for partitioning graphs",
+    author = "Kernighan, B W and Lin, S",
+    abstract = "We consider the problem of partitioning the nodes of a graph
+                with costs on its edges into subsets of given sizes so as to
+                minimize the sum of the costs on all edges cut. This problem
+                arises in several physical situations --- for example, in
+                assigning the components of electronic circuits to circuit boards
+                to minimize the number of connections between boards. This paper
+                presents a heuristic method for partitioning arbitrary graphs
+                which is both effective in finding optimal partitions, and fast
+                enough to be practical in solving large problems.",
+    journal = "Bell Syst. Tech. J.",
+    publisher = "Institute of Electrical and Electronics Engineers (IEEE)",
+    volume = 49,
+    number = 2,
+    pages = "291--307",
+    month = feb,
+    year = 1970,
+}
+@article{funke19-04,
+    title = "Stochastic block models: A comparison of variants and inference
+             methods",
+    author = "Funke, Thorben and Becker, Till",
+    abstract = "Finding communities in complex networks is a challenging task
+                and one promising approach is the Stochastic Block Model (SBM).
+                But the influences from various fields led to a diversity of
+                variants and inference methods. Therefore, a comparison of the
+                existing techniques and an independent analysis of their
+                capabilities and weaknesses is needed. As a first step, we review
+                the development of different SBM variants such as the
+                degree-corrected SBM of Karrer and Newman or Peixoto's
+                hierarchical SBM. Beside stating all these variants in a uniform
+                notation, we show the reasons for their development. Knowing the
+                variants, we discuss a variety of approaches to infer the optimal
+                partition like the Metropolis-Hastings algorithm. We perform our
+                analysis based on our extension of the Girvan-Newman test and the
+                Lancichinetti-Fortunato-Radicchi benchmark as well as a selection
+                of some real world networks. Using these results, we give some
+                guidance to the challenging task of selecting an inference method
+                and SBM variant. In addition, we give a simple heuristic to
+                determine the number of steps for the Metropolis-Hastings
+                algorithms that lack a usual stop criterion. With our comparison,
+                we hope to guide researches in the field of SBM and highlight the
+                problem of existing techniques to focus future research. Finally,
+                by making our code freely available, we want to promote a faster
+                development, integration and exchange of new ideas.",
+    journal = "PLoS One",
+    publisher = "Public Library of Science (PLoS)",
+    volume = 14,
+    number = 4,
+    pages = "e0215296",
+    month = apr,
+    year = 2019,
+    copyright = "http://creativecommons.org/licenses/by/4.0/",
+    language = "en",
+}
 
