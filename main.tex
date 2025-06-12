@@ -81,9 +81,9 @@ We used graph-tool~\cite{graph-tool} to optimize for minimum description length 
 	\end{subfloat}
 	\caption{Connectivity Comparison:
 		On the non-bipartite empirical networks (85).
-            The x-axis indicates the method.
-            Left: Proportion of clusters that are disconnected.
-            Right: Proportion of clusters that are poorly-connected (including disconnected).
+		The x-axis indicates the method.
+		Left: Proportion of clusters that are disconnected.
+		Right: Proportion of clusters that are poorly-connected (including disconnected).
 	}
 	\label{figs:fig3}
 \end{figure}
@@ -104,9 +104,11 @@ See ~\cite{funke19-04} for a more in-depth discussion of the variants that does 
 The main variants of SBM are the degree corrected and non-degree corrected SBM models for flat and also hierachical.
 Here, we use the microcanonical formulation~\cite{peixoto17-01}~\cite{peixoto14-03}.
 In addition, closed formulas have been derived that speed up the calculation of the likelihood function by including the number of blocks~\cite{come15-12}.
-
 Finally, there are SBM models that specialize on disassociative structures in bipartite graphs~\cite{yen20-09}.
 Since this is a subclass of the other models, here we do not investigate it further.
+
+We follow the naming convention in ~\cite{funke19-04}.
+See the formulas in \ref{sbm-formulas}.
 
 \subsection*{Inference Algorithms}
 
@@ -118,128 +120,107 @@ TODO: something about dcd
 
 \subsection*{Results}
 
-graph-tool most scalable?
-do all models have disconnected problem?
+% graph-tool most scalable?
+% do all models have disconnected problem?
 
 Datasets (10 smallest in the medium list, by node count -- 906 to 2115 nodes):
-empirical: 
+empirical:
 \begin{verbatim}
 dnc,uni_email,polblogs,faa_routes,netscience,new_zealand_collab
 ,collins_yeast,interactome_stelzl,bible_nouns,at_migrations    
 \end{verbatim}
 
-synthetic: EC-SBM with the Leiden+Mod clustering based on each of the empirical datasets
+% synthetic: EC-SBM with the Leiden+Mod clustering based on each of the empirical datasets
 
-Procedure:
-1. Calculate the "chosen SBM" on each dataset
-    - Run graph-tool DC-SBM, Non-DC-SBM, PP-SBM
-    - Find the one with the minimum description length
-    - Extract the number of clusters
-2. Run PySBM on each dataset
-    - Run (9) SBM variants from the PySBM paper: SKN, DCKN, ICLexJ, ICLexU, SNR, DCNR, SPC, DCPU, DCPUH
-    - Run (3) inference algorithms from the PySBM paper: MHA 250k, PAH, KL-EM
-3. Find cluster statistics
-4. On synthetic, also calculate NMI, ARI, AMI, AGRI, RNMI
-
-Empirical figures:
-1. Cluster Connectivity: Box plot counting the disconnected proportions.
-    - (a): x-axis is the (9) pysbm SBM variant + (1) graph-tool: y-axis is the proportion -- each data point is a network averaged across the 3 inference algorithms
-    - (b): x-axis is the (3) pysbm algorithms + (1) graph-tool:  y-axis is the proportion -- each data point is a network averaged across the 9 sbm variants
-2. Runtime: Box-Plot
-    - (a): x-axis is the (3) pysbm algorithms + (1) graph-tool
-    - (b): y-axis is the seconds, log scale
-    - So, box summarizes 10 data points (for each network, averaged across the 9 sbm variants)
-
-Synthetic figures:
-1. Cluster Connectivity: Box plot counting the disconnected proportions.
-    - Same as the empirical figure.
-2. Cluster Accuracy: array of (5) box-plots
-    - One plot for each of the (5) metrics
-    - x-axis: the (3) inference algorithms  + (1) graph-tool
-    - y-axis: the score -- each data point is a network averaged across (9) sbm variants
-
-The pysbm also ran 10 replicates for each method, randomizing the initial partition.
-We will just run 1 replicate for now.
-
+% Procedure:
+% 1. Calculate the "chosen SBM" on each dataset
+% - Run graph-tool DC-SBM, Non-DC-SBM, PP-SBM
+% - Find the one with the minimum description length
+% - Extract the number of clusters
+% 2. Run PySBM on each dataset
+% - Run (9) SBM variants from the PySBM paper: SKN, DCKN, ICLexJ, ICLexU, SNR, DCNR, SPC, DCPU, DCPUH
+% - Run (3) inference algorithms from the PySBM paper: MHA 250k, PAH, KL-EM
+% 3. Find cluster statistics
+% 4. On synthetic, also calculate NMI, ARI, AMI, AGRI, RNMI
 
 \begin{figure}[!htpb]
-\centering
-\includegraphics[]{figures/accuracy_box.pdf}
-\caption[]{\textbf{Clustering accuracy on LFR and RECCS synthetic networks}  Each subfigure shows the results on five different clustering accuracy metrics (NMI, ARI, AGRI, RMI, and AMI). The biggest differences in accuracies come from ARI, AGRI, and RMI, where chosen SBM + WCC has the best accuracy followed by chosen SBM and then hierarchical SBM. On NMI and AMI, although there may be a slight advantage to using chosen SBM + WCC, the accuracy differences across the different methods were small.}
-\label{fig:synthetic-accuracy}
+	\centering
+	\includegraphics[]{figures/accuracy_box.pdf}
+	\caption[]{\textbf{Clustering accuracy on LFR and RECCS synthetic networks}  Each subfigure shows the results on five different clustering accuracy metrics (NMI, ARI, AGRI, RMI, and AMI). The biggest differences in accuracies come from ARI, AGRI, and RMI, where chosen SBM + WCC has the best accuracy followed by chosen SBM and then hierarchical SBM. On NMI and AMI, although there may be a slight advantage to using chosen SBM + WCC, the accuracy differences across the different methods were small.}
+	\label{fig:synthetic-accuracy}
 \end{figure}
 
 \begin{figure}[!htpb]
-\centering
-\includegraphics[]{figures/conn_box.pdf}
-\caption[]{\textbf{Proportion of disconnected clusters produced by Hierarchical SBM and Chosen SBM on synthetic LFR and RECCS networks}  We see that hierarchical SBM tends to produce clusterings with higher proportions of disconnectd clusters than chosen SBM on these synthetic networks.}
-\label{fig:synthetic-connectivity}
+	\centering
+	\includegraphics[]{figures/conn_box.pdf}
+	\caption[]{\textbf{Proportion of disconnected clusters produced by Hierarchical SBM and Chosen SBM on synthetic LFR and RECCS networks}  We see that hierarchical SBM tends to produce clusterings with higher proportions of disconnectd clusters than chosen SBM on these synthetic networks.}
+	\label{fig:synthetic-connectivity}
 \end{figure}
 %Minhyuk: write down how many networks 
 
 \begin{figure}[!htpb]
-\centering
-\includegraphics[]{figures/accuracy_choose_lower.pdf}
-\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Analysis on the Youtube Graph with Varying Ground-truth Cluster Inclusion Thresholds (keep lowest cluster id)} Here we show the results obtained by clustering the Youtube graph with chosen SBM+WCC, Leiden optimizing for modularity and processed with CM and WCC, and Leiden optimizing for CPM at r=0.01 and processed with CM and WCC. Only those ground-truth clusters with size greater than 10 was used. If a node had multiple memberships, it was assigned to the cluster with the smallest cluster id and stripped of its membership in all other clusters, thus making the ground-truth clustering disjoint. Each ground-truth cluster in the Youtube graph was assigned a noise score computed by the ratio of its external degree to total degree. For all sub figures, the x-axis marks the threshold such that only those ground-truth clusters with noise level less than the threshold is included. Consequently, clustering accuracies such as NMI, ARI, AGRI, RMI, and AMI are only computed on the reduced set of ground-truth clusters, ignoring any nodes not part of those clusters. Figure at the top left shows how many nodes remain in the set of ground-truth clusters following this thresholding step. Figure out the bottom left shows the distribution of cluster noise at different thresholds. The subfigures on the right show the clustering accuracies of all methods against each of the ground-truths thresholded at 0.1, 0.2, ..., 1.0. }
-\label{fig:youtube-accuracy-choose-lower}
+	\centering
+	\includegraphics[]{figures/accuracy_choose_lower.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Analysis on the Youtube Graph with Varying Ground-truth Cluster Inclusion Thresholds (keep lowest cluster id)} Here we show the results obtained by clustering the Youtube graph with chosen SBM+WCC, Leiden optimizing for modularity and processed with CM and WCC, and Leiden optimizing for CPM at r=0.01 and processed with CM and WCC. Only those ground-truth clusters with size greater than 10 was used. If a node had multiple memberships, it was assigned to the cluster with the smallest cluster id and stripped of its membership in all other clusters, thus making the ground-truth clustering disjoint. Each ground-truth cluster in the Youtube graph was assigned a noise score computed by the ratio of its external degree to total degree. For all sub figures, the x-axis marks the threshold such that only those ground-truth clusters with noise level less than the threshold is included. Consequently, clustering accuracies such as NMI, ARI, AGRI, RMI, and AMI are only computed on the reduced set of ground-truth clusters, ignoring any nodes not part of those clusters. Figure at the top left shows how many nodes remain in the set of ground-truth clusters following this thresholding step. Figure out the bottom left shows the distribution of cluster noise at different thresholds. The subfigures on the right show the clustering accuracies of all methods against each of the ground-truths thresholded at 0.1, 0.2, ..., 1.0. }
+	\label{fig:youtube-accuracy-choose-lower}
 \end{figure}
 
 \begin{figure}[!htpb]
-\centering
-\includegraphics[]{figures/accuracy_remove_overlap.pdf}
-\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Analysis on the Youtube Graph with Varying Ground-truth Cluster Inclusion Thresholds (remove overlap cluster id)} Here we show the results obtained by clustering the Youtube graph with chosen SBM+WCC, Leiden optimizing for modularity and processed with CM and WCC, and Leiden optimizing for CPM at r=0.01 and processed with CM and WCC. Only those ground-truth clusters with size greater than 10 was used. If a node had multiple memberships, it was simply removed from the ground-truth clustering, thus making the ground-truth clustering disjoint. Each ground-truth cluster in the Youtube graph was assigned a noise score computed by the ratio of its external degree to total degree. For all sub figures, the x-axis marks the threshold such that only those ground-truth clusters with noise level less than the threshold is included. Consequently, clustering accuracies such as NMI, ARI, AGRI, RMI, and AMI are only computed on the reduced set of ground-truth clusters, ignoring any nodes not part of those clusters. Figure at the top left shows how many nodes remain in the set of ground-truth clusters following this thresholding step. Figure out the bottom left shows the distribution of cluster noise at different thresholds. The subfigures on the right show the clustering accuracies of all methods against each of the ground-truths thresholded at 0.1, 0.2, ..., 1.0. }
-\label{fig:youtube-accuracy-remove-overlap}
+	\centering
+	\includegraphics[]{figures/accuracy_remove_overlap.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Analysis on the Youtube Graph with Varying Ground-truth Cluster Inclusion Thresholds (remove overlap cluster id)} Here we show the results obtained by clustering the Youtube graph with chosen SBM+WCC, Leiden optimizing for modularity and processed with CM and WCC, and Leiden optimizing for CPM at r=0.01 and processed with CM and WCC. Only those ground-truth clusters with size greater than 10 was used. If a node had multiple memberships, it was simply removed from the ground-truth clustering, thus making the ground-truth clustering disjoint. Each ground-truth cluster in the Youtube graph was assigned a noise score computed by the ratio of its external degree to total degree. For all sub figures, the x-axis marks the threshold such that only those ground-truth clusters with noise level less than the threshold is included. Consequently, clustering accuracies such as NMI, ARI, AGRI, RMI, and AMI are only computed on the reduced set of ground-truth clusters, ignoring any nodes not part of those clusters. Figure at the top left shows how many nodes remain in the set of ground-truth clusters following this thresholding step. Figure out the bottom left shows the distribution of cluster noise at different thresholds. The subfigures on the right show the clustering accuracies of all methods against each of the ground-truths thresholded at 0.1, 0.2, ..., 1.0. }
+	\label{fig:youtube-accuracy-remove-overlap}
 \end{figure}
 
 \begin{figure}[!htpb]
-\centering
-\includegraphics[]{figures/youtube_ground_truth_stats.pdf}
-\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Empirical Statistics on Youtube Ground-truth Clusterings} We show the distributions over all the non-singleton clusters of conductance, modularity, normalized mincut size, density, and mixing parameter for the two different ways of creating a disjoint ground-truth partition for the ground-truth clusters of the Youtube graph. Density here is calculated by $\frac{2m}{n(n-1)}$ where $m$ is the number of edges inside the cluster and $n$ is the number of nodes inside the cluster. Mixing parameter here is computed by dividing the sum of external degree by sum of total degree over all nodes in a cluster. The ground-truth clusters, for both ways of processing the original ground-truth clustering, exhibit high conductance, low modularity, low normalized mincut sizes, low density, and high mixing parameters, indicating that the ground-truth clusters don't have good separability, are sparse, and have poor internal connectivity. High conductance and mixing parameter indicate low separability, low modularity and density indicate high sparsity, and low normalized mincut sizes indicate poor connectivity.}
-\label{fig:youtube-ground-truth-stats}
+	\centering
+	\includegraphics[]{figures/youtube_ground_truth_stats.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Empirical Statistics on Youtube Ground-truth Clusterings} We show the distributions over all the non-singleton clusters of conductance, modularity, normalized mincut size, density, and mixing parameter for the two different ways of creating a disjoint ground-truth partition for the ground-truth clusters of the Youtube graph. Density here is calculated by $\frac{2m}{n(n-1)}$ where $m$ is the number of edges inside the cluster and $n$ is the number of nodes inside the cluster. Mixing parameter here is computed by dividing the sum of external degree by sum of total degree over all nodes in a cluster. The ground-truth clusters, for both ways of processing the original ground-truth clustering, exhibit high conductance, low modularity, low normalized mincut sizes, low density, and high mixing parameters, indicating that the ground-truth clusters don't have good separability, are sparse, and have poor internal connectivity. High conductance and mixing parameter indicate low separability, low modularity and density indicate high sparsity, and low normalized mincut sizes indicate poor connectivity.}
+	\label{fig:youtube-ground-truth-stats}
 \end{figure}
 
 \begin{figure}[!htpb]
-\centering
-\includegraphics[]{figures/choose_lower_youtube_sbm_accuracy.pdf}
-\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of SBM and SBM-WCC} Only showing SBM vs SBM-WCC. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
-\label{fig:choose-lower-sbm}
+	\centering
+	\includegraphics[]{figures/choose_lower_youtube_sbm_accuracy.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of SBM and SBM-WCC} Only showing SBM vs SBM-WCC. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
+	\label{fig:choose-lower-sbm}
 \end{figure}
 
 \begin{figure}[!htpb]
-\centering
-\includegraphics[]{figures/choose_lower_youtube_leiden_mod_accuracy.pdf}
-\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of Leiden optimizing for modularity and its treatments} Only showing Leiden-mod vs Leiden-mod+WCC vs Leiden-mod+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
-\label{fig:choose-lower-leiden-mod}
-\end{figure}
-
-
-\begin{figure}[!htpb]
-\centering
-\includegraphics[]{figures/choose_lower_youtube_leiden_cpm_accuracy.pdf}
-\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of Leiden optimizing for CPM and its treatments}Only showing Leiden-CPM(r=0.01) vs Leiden-CPM(r=0.01)+WCC vs Leiden-CPM(r=0.01)+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
-\label{fig:choose-lower-leiden-cpm}
-\end{figure}
-
-\begin{figure}[!htpb]
-\centering
-\includegraphics[]{figures/remove_overlap_youtube_sbm_accuracy.pdf}
-\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of SBM and SBM-WCC} Only showing SBM vs SBM-WCC. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
-\label{fig:remove-overlap-sbm}
-\end{figure}
-
-\begin{figure}[!htpb]
-\centering
-\includegraphics[]{figures/remove_overlap_youtube_leiden_mod_accuracy.pdf}
-\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of Leiden optimizing for modularity and its treatments} Only showing Leiden-mod vs Leiden-mod+WCC vs Leiden-mod+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
-\label{fig:remove-overlap-leiden-mod}
+	\centering
+	\includegraphics[]{figures/choose_lower_youtube_leiden_mod_accuracy.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of Leiden optimizing for modularity and its treatments} Only showing Leiden-mod vs Leiden-mod+WCC vs Leiden-mod+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
+	\label{fig:choose-lower-leiden-mod}
 \end{figure}
 
 
 \begin{figure}[!htpb]
-\centering
-\includegraphics[]{figures/remove_overlap_youtube_leiden_cpm_accuracy.pdf}
-\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of Leiden optimizing for CPM and its treatments}Only showing Leiden-CPM(r=0.01) vs Leiden-CPM(r=0.01)+WCC vs Leiden-CPM(r=0.01)+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
-\label{fig:remove-overlap-leiden-cpm}
+	\centering
+	\includegraphics[]{figures/choose_lower_youtube_leiden_cpm_accuracy.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of Leiden optimizing for CPM and its treatments}Only showing Leiden-CPM(r=0.01) vs Leiden-CPM(r=0.01)+WCC vs Leiden-CPM(r=0.01)+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
+	\label{fig:choose-lower-leiden-cpm}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[]{figures/remove_overlap_youtube_sbm_accuracy.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of SBM and SBM-WCC} Only showing SBM vs SBM-WCC. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
+	\label{fig:remove-overlap-sbm}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[]{figures/remove_overlap_youtube_leiden_mod_accuracy.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of Leiden optimizing for modularity and its treatments} Only showing Leiden-mod vs Leiden-mod+WCC vs Leiden-mod+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
+	\label{fig:remove-overlap-leiden-mod}
+\end{figure}
+
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[]{figures/remove_overlap_youtube_leiden_cpm_accuracy.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of Leiden optimizing for CPM and its treatments}Only showing Leiden-CPM(r=0.01) vs Leiden-CPM(r=0.01)+WCC vs Leiden-CPM(r=0.01)+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
+	\label{fig:remove-overlap-leiden-cpm}
 \end{figure}
 
 \clearpage
@@ -267,16 +248,16 @@ Similarly, we can define $k_{c_{in}} = 2|\{e_{ij} : v_{i} \in c \text{ and } v_{
 
 \begin{itemize}
 
-    \item It seems that $E_{cut}$ is exactly the same as $k_{c\_out}$. If so, just use one term and not the other.
-    \item It looks like the denominator in Noise is exactly the same as $k_c$.
-    \item Tandy;s comments about conductance are probably wrong. Ignore this. 
-    'm looking right now at a definition for Conductance in another paper, see Section 2.1 in \url{http://snap.stanford.edu/class/cs224w-2018/reports/CS224W-2018-50.pdf}.    \textcolor{blue}{Min writes:I don't think by definition $k_{c} \leq |E|$ holds true since $k_{c}$ is upper-bounded by $2|E|$. We are double counting edges when summing the degree per node. I also put two subsections below that show that these two formulas end up giving the same numbers. I'm not confident that I didn't make any mistakes but intuitively I feel that $A(S)=k_{S}$ since both of them are counting the number of edges per node in $S$.}
-    \item The definition of mixing parameter that you are using is not standard.  You are defining this term in order to have a way of talking about the ``mixing parameter of a cluster", but a different definition might be better. We can discuss.
-    But given the definition, it looks to be exactly the same as Noise. 
-    Consider instead just writing down the distribution of individual mixing parameters of the nodes that are in the cluster. 
-    That distribution can be then combined to 
-    get the distribution of individual mixing 
-    parameters for the clusters being considered.
+	\item It seems that $E_{cut}$ is exactly the same as $k_{c\_out}$. If so, just use one term and not the other.
+	\item It looks like the denominator in Noise is exactly the same as $k_c$.
+	\item Tandy;s comments about conductance are probably wrong. Ignore this.
+	      'm looking right now at a definition for Conductance in another paper, see Section 2.1 in \url{http://snap.stanford.edu/class/cs224w-2018/reports/CS224W-2018-50.pdf}.    \textcolor{blue}{Min writes:I don't think by definition $k_{c} \leq |E|$ holds true since $k_{c}$ is upper-bounded by $2|E|$. We are double counting edges when summing the degree per node. I also put two subsections below that show that these two formulas end up giving the same numbers. I'm not confident that I didn't make any mistakes but intuitively I feel that $A(S)=k_{S}$ since both of them are counting the number of edges per node in $S$.}
+	\item The definition of mixing parameter that you are using is not standard.  You are defining this term in order to have a way of talking about the ``mixing parameter of a cluster", but a different definition might be better. We can discuss.
+	      But given the definition, it looks to be exactly the same as Noise.
+	      Consider instead just writing down the distribution of individual mixing parameters of the nodes that are in the cluster.
+	      That distribution can be then combined to
+	      get the distribution of individual mixing
+	      parameters for the clusters being considered.
 \end{itemize}.
 
 
@@ -286,33 +267,33 @@ A cluster $c$ defines a cut in which on one side of the cut is $c$ and the other
 
 
 \begin{equation}
-Conductance(c) = \frac{k_{c_{out}}}{min(k_{c}, 2|E|-k_{c})}
+	Conductance(c) = \frac{k_{c_{out}}}{min(k_{c}, 2|E|-k_{c})}
 \end{equation}
 
 \subsubsection{Derivation of $A(S)$}
 $A_{ij}$ is 1 if there is an edge between $v_{i}$ and $v_{j}$ and 0 otherwise since our input networks are considered unweighted.
 
 \begin{align}
-A(S) &= \sum_{i \in S,j\in V}{A_{ij}} \\
-&= \sum_{v_{i} \in S}{|{e_{ij} : v_{i} \in S \text{ and } v_{j} \in V \text { and } i \neq j}|} \\
-&= \sum_{v_{i} \in S}{degree(v_{i})}
+	A(S) & = \sum_{i \in S,j\in V}{A_{ij}}                                                                \\
+	     & = \sum_{v_{i} \in S}{|{e_{ij} : v_{i} \in S \text{ and } v_{j} \in V \text { and } i \neq j}|} \\
+	     & = \sum_{v_{i} \in S}{degree(v_{i})}
 \end{align}
 
 \subsubsection{Derivation of $A(\overline{S})$}
 $A_{ij}$ is 1 if there is an edge between $v_{i}$ and $v_{j}$ and 0 otherwise since our input networks are considered unweighted.
 
 \begin{align}
-A(\overline{S}) &= \sum_{i \in \overline{S},j\in V}{A_{ij}} \\
-&= \sum_{v_{i} \in \overline{S}}{|{e_{ij} : v_{i} \in \overline{S} \text{ and } v_{j} \in V \text { and } i \neq j}|} \\
-&= \sum_{v_{i} \in \overline{S}}{degree(v_{i})} \\
-&= 2|E| - \sum_{v_{i} \in S}{degree(v_{i})} 
+	A(\overline{S}) & = \sum_{i \in \overline{S},j\in V}{A_{ij}}                                                                           \\
+	                & = \sum_{v_{i} \in \overline{S}}{|{e_{ij} : v_{i} \in \overline{S} \text{ and } v_{j} \in V \text { and } i \neq j}|} \\
+	                & = \sum_{v_{i} \in \overline{S}}{degree(v_{i})}                                                                       \\
+	                & = 2|E| - \sum_{v_{i} \in S}{degree(v_{i})}
 \end{align}
 
 
 \subsection{Noise}
 
 \begin{equation}
-Noise = \frac{k_{c\_out}}{k_{c}}
+	Noise = \frac{k_{c\_out}}{k_{c}}
 \end{equation}
 
 \subsection{Mixing parameter}
@@ -323,28 +304,28 @@ The internal degree of a node $v_{i} \in c$ is $k_{v_{i}\_{in}}=|\{e_{ij} :v_{j}
 The external degree of a node $v_{i} \in c$ is $k_{v_{i}\_{out}}=|\{e_{ij} :v_{j} \notin c |$
 
 \begin{equation}
-MixingParameter(v_{i}) = \frac{k_{v_{i}\_out}}{k_{v_{i}\_in} + k_{v_{i}\_out}}
+	MixingParameter(v_{i}) = \frac{k_{v_{i}\_out}}{k_{v_{i}\_in} + k_{v_{i}\_out}}
 \end{equation}
 
 \subsection{Density}
 \begin{equation}
-Density=\frac{|\{e_{ij} : v_{i},v_{j} \in c \text{ and } i \neq j\}|}{{|N|\choose 2}}
+	Density=\frac{|\{e_{ij} : v_{i},v_{j} \in c \text{ and } i \neq j\}|}{{\binom{|N|}{2}}}
 \end{equation}
 
 \subsection{Normalized mincut size}
 \begin{equation}
-NormalizedMincutSize=\frac{MincutSize}{\log_{10}{|c|}}
+	NormalizedMincutSize=\frac{MincutSize}{\log_{10}{|c|}}
 \end{equation}
-  % def conductance(self, graph):
-  %       num = self.get_border_edges(graph)
-  %       deg_sum = sum(graph.degree(v) for v in self.nodeset)
-  %       den = min(deg_sum, 2*graph.m() - deg_sum)
-  %       if den == 0:
-  %           # 1. singlenode cluster
-  %           # 2. entire graph is one cluster
-  %           # 3. cluster has no intracluster edges
-  %           return -42
-  %       return num/den
+% def conductance(self, graph):
+%       num = self.get_border_edges(graph)
+%       deg_sum = sum(graph.degree(v) for v in self.nodeset)
+%       den = min(deg_sum, 2*graph.m() - deg_sum)
+%       if den == 0:
+%           # 1. singlenode cluster
+%           # 2. entire graph is one cluster
+%           # 3. cluster has no intracluster edges
+%           return -42
+%       return num/den
 
 % \begin{figure}[!htpb]
 % \centering
@@ -353,9 +334,134 @@ NormalizedMincutSize=\frac{MincutSize}{\log_{10}{|c|}}
 % \label{fig:}
 % \end{figure}
 
+\section{Description Length Formulas}
+\label{sbm-formulas}
 
+\subsection*{Microcanonical Non-Degree Corrected (SPC)}
 
+Let $A$ be the adjacency matrix, $\vb{e}$ the edge matrix between blocks, and $\vb{b}$ the block assignments.
+We optimize for minimum description length $\Sigma_{spc} = -\log_2P(A, \vb{e}, \vb{b}) = -\log_2 P(A \mid \vb{e}, \vb{b}) - \log_2 P(\vb{e} \mid \vb{b}) - \log_2 P(\vb{b})$, where
+\begin{align}
+	P(A \mid \vb{e}, \vb{b}) & = \frac{\prod_{r < s} e_{rs}! \prod_{r} e_{rr}!!}{\prod_r n_r^{e_r}} \frac{1}{\prod_{i < j} A_{ij}! \prod_{i} A_{ii}!!} \\
+	P(\vb{e} \mid \vb{b})    & = \left( \binom{K(K+1)/2}{M} \right)^{-1}                                                                               \\
+	P(\vb{b})                & = \frac{\prod_r n_r!}{N!} \binom{N - 1}{M - 1}^{-1} \frac{1}{N}
+\end{align}
+where $N$ is the total number of nodes, $M$ the total number of edges, $K$ the number of blocks, $\left( \binom{n}{k} \right) = \binom{n + k - 1}{k}$, and $(2n)!! = 2^n n!$.
+See equations (23-25) of ~\cite{peixoto17-01}, or (13-15) of ~\cite{funke19-04}.
 
+In graph-tool, this corresponds to the parameters
+\begin{verbatim}
+    BlockState(g, b, deg_corr=False).entropy()
+\end{verbatim}
+
+\subsection*{Microcanonical Degree Corrected (DCPU)}
+
+Let $A$ be the adjacency matrix, $\vb{e}$ the edge matrix between blocks, $\vb{k}$ the degree vector (per node), and $\vb{b}$ the block assignments (per node).
+We optimize for minimum description length $\Sigma_{dpcu} = -\log_2P(A, \vb{k}, \vb{e}, \vb{b}) = -\log_2P(A \mid \vb{k}, \vb{e}, \vb{b}) - \log_2 P(\vb{k} \mid \vb{e}, \vb{b}) - \log_2 P(\vb{e} \mid \vb{b}) - \log_2 P(\vb{b}) $, where
+\begin{align}
+	P(A \mid \vb{k}, \vb{e}, \vb{b}) & = \frac{ \prod_i k_i! \prod_{r < s} e_{rs}! \prod_{r} e_{rr}!!} {\prod_{i < j} A_{ij}! \prod_i A_{ii}!! \prod_r e_r!}                                      \\
+	P(\vb{k} \mid \vb{e}, \vb{b})    & = \prod_r \left( \binom{n_r}{e_r} \right)^{-1}                                                                                                             \\
+	P(\vb{e} \mid \vb{b})            & = \prod_{l=1}^{L} \prod_{r < s} \left( \binom{n_r^l n_s^l}{e_{rs}^{l+1}} \right)^{-1} \prod_r \left( \binom{ n_r^l (n_r^l + 1) / 2 }{e_{rr}^{l+1} }\right) \\
+	P(\vb{b})                        & = \prod_{l=1}^L \frac{\prod_r n_r^l!}{K^{l-1}!} \binom{ K^{l-1} - 1}{K^l - 1}^{-1} \frac{1}{K^{l-1}}
+\end{align}
+where $N$ is the total number of nodes, $M$ the total number of edges, $K$ the number of blocks, $\left( \binom{n}{k} \right) = \binom{n + k - 1}{k}$, and $(2n)!! = 2^n n!$.
+See equations (1-3), (26) in ~\cite{peixoto17-01}, or (16-18) of ~\cite{funke19-04}.
+
+In graph-tool, this corresponds to the parameters
+\begin{verbatim}
+    BlockState(g, b, deg_corr=False, entropy_args={ degree_dl_kind = "uniform" }).entropy()
+\end{verbatim}
+
+\subsection*{Microcanonical Degree Corrected (DCPUH)}
+
+Let $A$ be the adjacency matrix, $\vb{e}$ the edge matrix between blocks, $\vb{k}$ the degree vector (per node), and $\vb{b}$ the block assignments (per node).
+We optimize for minimum description length $\Sigma_{dpcuh} = -\log_2P(A, \vb{k}, \vb{e}, \vb{b}) = -\log_2P(A \mid \vb{k}, \vb{e}, \vb{b}) - \log_2 P(\vb{k} \mid \vb{e}, \vb{b}) - \log_2 P(\vb{e} \mid \vb{b}) - \log_2 P(\vb{b}) $, where
+\begin{align}
+	P(A \mid \vb{k}, \vb{e}, \vb{b}) & = \frac{ \prod_i k_i! \prod_{r < s} e_{rs}! \prod_{r} e_{rr}!!} {\prod_{i < j} A_{ij}! \prod_i A_{ii}!! \prod_r e_r!}                                      \\
+	P(\vb{k} \mid \vb{e}, \vb{b})    & = \prod_r \frac{\prod_k N_k^r!}{n_r!} q(e_r, n_r)^{-1}                                                                                                     \\
+	P(\vb{e} \mid \vb{b})            & = \prod_{l=1}^{L} \prod_{r < s} \left( \binom{n_r^l n_s^l}{e_{rs}^{l+1}} \right)^{-1} \prod_r \left( \binom{ n_r^l (n_r^l + 1) / 2 }{e_{rr}^{l+1} }\right) \\
+	P(\vb{b})                        & = \prod_{l=1}^L \frac{\prod_r n_r^l!}{K^{l-1}!} \binom{ K^{l-1} - 1}{K^l - 1}^{-1} \frac{1}{K^{l-1}}
+\end{align}
+where $N_k^r$ denotes the number of nodes with degree $k$ in group $r$ and $q(m, n)$ the number of partitions of $m$ into $n$ parts.
+That is,
+\begin{equation}
+	q(m, n) =
+	\begin{cases}
+		1                         & m = n = 0        \\
+		0                         & n = 0, m > 0     \\
+		q(m, m)                   & n > m            \\
+		q(m, n - 1) + q(m - n, n) & \text{otherwise}
+	\end{cases}
+\end{equation}
+See equations (1-3), (27-30) in ~\cite{peixoto17-01}, or (16-18) of ~\cite{funke19-04}.
+
+In graph-tool, this corresponds to the parameters
+\begin{verbatim}
+    BlockState(g, b, deg_corr=False, entropy_args={ degree_dl_kind = "distributed" }).entropy()
+\end{verbatim}
+
+\subsection*{Microcanonical Non-Degree Corrected (HSPC)}
+
+Let $A$ be the adjacency matrix, $\vb{e}$ the edge matrix between blocks, and $\vb{b}$ the block assignments.
+We optimize for minimum description length $\Sigma_{hspc} = -\log_2P(A, \vb{e}, \vb{b}) = -\log_2 P(A \mid \vb{e}, \vb{b}) - \log_2 P(\vb{e} \mid \vb{b}) - \log_2 P(\vb{b})$, where
+\begin{align}
+	P(A \mid \vb{e}, \vb{b}) & = \frac{\prod_{r < s} e_{rs}! \prod_{r} e_{rr}!!}{\prod_r n_r^{e_r}} \frac{1}{\prod_{i < j} A_{ij}! \prod_{i} A_{ii}!!}                                    \\
+	P(\vb{e} \mid \vb{b})    & = \prod_{l=1}^{L} \prod_{r < s} \left( \binom{n_r^l n_s^l}{e_{rs}^{l+1}} \right)^{-1} \prod_r \left( \binom{ n_r^l (n_r^l + 1) / 2 }{e_{rr}^{l+1} }\right) \\
+	P(\vb{b})                & = \prod_{l=1}^L \frac{\prod_r n_r^l!}{K^{l-1}!} \binom{ K^{l-1} - 1}{K^l - 1}^{-1} \frac{1}{K^{l-1}}
+\end{align}
+where $N$ is the total number of nodes, $M$ the total number of edges, $K$ the number of blocks, $\left( \binom{n}{k} \right) = \binom{n + k - 1}{k}$, and $(2n)!! = 2^n n!$.
+See equations (23-25), (41-42) of ~\cite{peixoto17-01}, or (13-15), (19-20) of ~\cite{funke19-04}.
+
+In graph-tool, this corresponds to the parameters
+\begin{verbatim}
+    NestedBlockState(g, b, deg_corr=False).entropy()
+\end{verbatim}
+
+\subsection*{Microcanonical Degree Corrected (HDCPU)}
+
+Let $A$ be the adjacency matrix, $\vb{e}$ the edge matrix between blocks, $\vb{k}$ the degree vector (per node), and $\vb{b}$ the block assignments (per node).
+We optimize for minimum description length $\Sigma_{hdpcu} = -\log_2P(A, \vb{k}, \vb{e}, \vb{b}) = -\log_2P(A \mid \vb{k}, \vb{e}, \vb{b}) - \log_2 P(\vb{k} \mid \vb{e}, \vb{b}) - \log_2 P(\vb{e} \mid \vb{b}) - \log_2 P(\vb{b}) $, where
+\begin{align}
+	P(A \mid \vb{k}, \vb{e}, \vb{b}) & = \frac{ \prod_i k_i! \prod_{r < s} e_{rs}! \prod_{r} e_{rr}!!} {\prod_{i < j} A_{ij}! \prod_i A_{ii}!! \prod_r e_r!}                                      \\
+	P(\vb{k} \mid \vb{e}, \vb{b})    & = \prod_r \left( \binom{n_r}{e_r} \right)^{-1}                                                                                                             \\
+	P(\vb{e} \mid \vb{b})            & = \prod_{l=1}^{L} \prod_{r < s} \left( \binom{n_r^l n_s^l}{e_{rs}^{l+1}} \right)^{-1} \prod_r \left( \binom{ n_r^l (n_r^l + 1) / 2 }{e_{rr}^{l+1} }\right) \\
+	P(\vb{b})                        & = \prod_{l=1}^L \frac{\prod_r n_r^l!}{K^{l-1}!} \binom{ K^{l-1} - 1}{K^l - 1}^{-1} \frac{1}{K^{l-1}}
+\end{align}
+where $N$ is the total number of nodes, $M$ the total number of edges, $K$ the number of blocks, $\left( \binom{n}{k} \right) = \binom{n + k - 1}{k}$, and $(2n)!! = 2^n n!$.
+See equations (1-3), (26), (41-42) in ~\cite{peixoto17-01}, or (16-18) of ~\cite{funke19-04}.
+
+In graph-tool, this corresponds to the parameters
+\begin{verbatim}
+    NestedBlockState(g, b, deg_corr=False, entropy_args={ degree_dl_kind = "uniform" }).entropy()
+\end{verbatim}
+
+\subsection*{Microcanonical Degree Corrected (HDCPUH)}
+
+Let $A$ be the adjacency matrix, $\vb{e}$ the edge matrix between blocks, $\vb{k}$ the degree vector (per node), and $\vb{b}$ the block assignments (per node).
+We optimize for minimum description length $\Sigma_{hdpcuh} = -\log_2P(A, \vb{k}, \vb{e}, \vb{b}) = -\log_2P(A \mid \vb{k}, \vb{e}, \vb{b}) - \log_2 P(\vb{k} \mid \vb{e}, \vb{b}) - \log_2 P(\vb{e} \mid \vb{b}) - \log_2 P(\vb{b}) $, where
+\begin{align}
+	P(A \mid \vb{k}, \vb{e}, \vb{b}) & = \frac{ \prod_i k_i! \prod_{r < s} e_{rs}! \prod_{r} e_{rr}!!} {\prod_{i < j} A_{ij}! \prod_i A_{ii}!! \prod_r e_r!}                                      \\
+	P(\vb{k} \mid \vb{e}, \vb{b})    & = \prod_r \frac{\prod_k N_k^r!}{n_r!} q(e_r, n_r)^{-1}                                                                                                     \\
+	P(\vb{e} \mid \vb{b})            & = \prod_{l=1}^{L} \prod_{r < s} \left( \binom{n_r^l n_s^l}{e_{rs}^{l+1}} \right)^{-1} \prod_r \left( \binom{ n_r^l (n_r^l + 1) / 2 }{e_{rr}^{l+1} }\right) \\
+	P(\vb{b})                        & = \prod_{l=1}^L \frac{\prod_r n_r^l!}{K^{l-1}!} \binom{ K^{l-1} - 1}{K^l - 1}^{-1} \frac{1}{K^{l-1}}
+\end{align}
+where $N_k^r$ denotes the number of nodes with degree $k$ in group $r$ and $q(m, n)$ the number of partitions of $m$ into $n$ parts.
+That is,
+\begin{equation}
+	q(m, n) =
+	\begin{cases}
+		1                         & m = n = 0        \\
+		0                         & n = 0, m > 0     \\
+		q(m, m)                   & n > m            \\
+		q(m, n - 1) + q(m - n, n) & \text{otherwise}
+	\end{cases}
+\end{equation}
+See equations (1-3), (27-30), (42) in ~\cite{peixoto17-01}, or (16-18), (19-20) of ~\cite{funke19-04}.
+
+In graph-tool, this corresponds to the parameters
+\begin{verbatim}
+    NestedBlockState(g, b, deg_corr=False, entropy_args={degree_dl_kind="distributed"}).entropy()
+\end{verbatim}
 
 \clearpage
 \bibliography{refs}
