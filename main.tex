@@ -120,9 +120,6 @@ TODO: something about dcd
 
 \subsection*{Results}
 
-% graph-tool most scalable?
-% do all models have disconnected problem?
-
 Datasets (10 smallest in the medium list, by node count -- 906 to 2115 nodes):
 empirical:
 \begin{verbatim}
@@ -130,19 +127,32 @@ dnc,uni_email,polblogs,faa_routes,netscience,new_zealand_collab
 ,collins_yeast,interactome_stelzl,bible_nouns,at_migrations    
 \end{verbatim}
 
-% synthetic: EC-SBM with the Leiden+Mod clustering based on each of the empirical datasets
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=\textwidth]{figures/pysbm_disc.pdf}
+	\caption[]{
+		\textbf{Connectivity of PySBM on medium empirical non-bipartite networks}
+		Each subfigure shows the connectivity of three PySBM inference algorithms on each (non-nested) SBM variant.
+		The nested versions are ommitted because PySBM only HPAH can run on a nested partition.
+		We used the 10 smallest datasets in the medium empriical datasets, from 906 to 2115 nodes.
+        DiscFrequency is the proportion of non-singleton clusters that are disconnected.
+	}
+	\label{fig:pysbm_disc.pdf}
+\end{figure}
 
-% Procedure:
-% 1. Calculate the "chosen SBM" on each dataset
-% - Run graph-tool DC-SBM, Non-DC-SBM, PP-SBM
-% - Find the one with the minimum description length
-% - Extract the number of clusters
-% 2. Run PySBM on each dataset
-% - Run (9) SBM variants from the PySBM paper: SKN, DCKN, ICLexJ, ICLexU, SNR, DCNR, SPC, DCPU, DCPUH
-% - Run (3) inference algorithms from the PySBM paper: MHA 250k, PAH, KL-EM
-% 3. Find cluster statistics
-% 4. On synthetic, also calculate NMI, ARI, AMI, AGRI, RNMI
-
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/pysbm_v_graph_tool_flat.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/pysbm_v_graph_tool_nested.pdf}
+	\caption[]{
+		\textbf{Comparison of PySBM against graph-tool on medium empirical non-bipartite networks}
+        The first two rows compare the entropy and disconnected frequencies on non-nested models, and the next two rows compare on nested models.
+        We calculate the description length according to each model and report RelEntropy normalized with dividing by graph-tool's clustering.
+        DiscFrequency is the proportion of non-singleton clusters that are disconnected.
+        We see that a worse description length is consistent with more disconnected clusters.
+	}
+	\label{fig:comparison_flat.pdf}
+\end{figure}
 \section{Results}
 
 \begin{figure}[!htpb]
