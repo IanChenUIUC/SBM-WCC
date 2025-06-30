@@ -57,22 +57,19 @@ We used graph-tool~\cite{graph-tool} to optimize for minimum description length 
 	\centering
 	\begin{subfloat}
 		\centering
-		\includegraphics[width=0.4\textwidth]{fig3a.pdf}
-	\end{subfloat}
-	\begin{subfloat}
-		\centering
-		\includegraphics[width=0.4\textwidth]{fig3b.pdf}
+		\includegraphics[width=\textwidth]{nested_sbm_conn.eps}
 	\end{subfloat}
 	% \begin{subfloat}
 	% 	\centering
 	% 	\includegraphics[width=0.8\textwidth]{fig3c.pdf}
 	% \end{subfloat}
-	\caption{Connectivity of Hierarchical-SBM Clusters.
+	\caption{
+		Connectivity of Hierarchical-SBM Clusters.
 		On the non-bipartite empirical networks (85).
 		Each bar is a network, sorted in increasing network size.
-		The y-axis shows percentage disconnected, poorly-connected $\setminus$ disconnected, and well-connected
-		(a) Level0 (b) Level1}
-	\label{figs:fig2}
+		The y-axis shows percentage disconnected, poorly connected, and well-connected
+	}
+	\label{figs:nested_sbm_conn}
 \end{figure}
 
 \begin{figure}[ht]
@@ -141,24 +138,24 @@ dnc,uni_email,polblogs,faa_routes,netscience,new_zealand_collab
 		\textbf{Connectivity of PySBM on medium empirical non-bipartite networks}
 		Each subfigure shows the connectivity of three PySBM inference algorithms on each (non-nested) SBM variant.
 		The nested versions are ommitted because PySBM only HPAH can run on a nested partition.
-        For all models besides SCP, DCPU, and DCPUH (where we used the blocks in graph-tool), we used the same number of blocks for PySBM as in chosen-SBM.
+		For all models besides SCP, DCPU, and DCPUH (where we used the blocks in graph-tool), we used the same number of blocks for PySBM as in chosen-SBM.
 		We used the 10 smallest datasets in the medium empriical datasets, from 906 to 2115 nodes.
-        DiscFrequency is the proportion of non-singleton clusters that are disconnected.
+		DiscFrequency is the proportion of non-singleton clusters that are disconnected.
 	}
 	\label{fig:pysbm_disc.pdf}
 \end{figure}
 
 \begin{figure}[!htpb]
 	\centering
-	\includegraphics[width=0.9\textwidth]{figures/pysbm_v_graph_tool_flat.pdf}
+	\includegraphics[width=\textwidth]{figures/pysbm_v_graph_tool_flat.eps}
 	% \includegraphics[width=0.9\textwidth]{figures/pysbm_v_graph_tool_nested.pdf}
 	\caption[]{
 		\textbf{Comparison of PySBM against graph-tool on medium empirical non-bipartite networks}
-        The first two rows compare the entropy and disconnected frequencies on non-nested models.%, and the next two rows compare on nested models.
-        We used the same number of blocks for PySBM as in graph-tool.% (but not the number of layers in the nested case).
-        We calculate the description length according to each model and report RelEntropy normalized with dividing by graph-tool's clustering.
-        DiscFrequency is the proportion of non-singleton clusters that are disconnected.
-        We see that a worse description length is consistent with more disconnected clusters.
+		The first two rows compare the entropy and disconnected frequencies on non-nested models.%, and the next two rows compare on nested models.
+		We used the same number of blocks for PySBM as in graph-tool.% (but not the number of layers in the nested case).
+		We calculate the description length according to each model and report RelEntropy normalized with dividing by graph-tool's clustering.
+		DiscFrequency is the proportion of non-singleton clusters that are disconnected.
+		We see that a worse description length is consistent with more disconnected clusters.
 	}
 	\label{fig:comparison_flat.pdf}
 \end{figure}
@@ -262,23 +259,22 @@ dnc,uni_email,polblogs,faa_routes,netscience,new_zealand_collab
 This next section has the results on SNAP networks, when we restrict attention to the top 5000 clusters.
 
 \begin{table}[!htpb]
-\caption{\textbf{Cluster statistics of the top 5000 clusters of SNAP networks}}
-\begin{tabular}{lcrcrr}
-\hline
-dataset     & \multicolumn{2}{c}{\# edges per cluster} & \multicolumn{2}{c}{\# nodes per cluster} & \multicolumn{1}{c}{\# clusters (n \textgreater 100)} \\
-\hline
+	\caption{\textbf{Cluster statistics of the top 5000 clusters of SNAP networks}}
+	\begin{tabular}{lcrcrr}
+		\hline
+		dataset     & \multicolumn{2}{c}{\# edges per cluster} & \multicolumn{2}{c}{\# nodes per cluster} & \multicolumn{1}{c}{\# clusters (n \textgreater 100)}                                \\
+		\hline
 
-            & min/median/max          & mean           & min/median/max          & mean           & \multicolumn{1}{l}{}                                \\
-\hline
-\hline
-amazon      & 3/20.0/900              & 39.8           & 3/8.0/328               & 13.5           & 31                                                  \\
-dblp        & 7/21.0/22699            & 69.1           & 6/8.0/7556              & 22.4           & 54                                                  \\
-livejournal & 3/100.0/84155           & 570.5          & 3/16.0/1441             & 27.8           & 145                            \\
-orkut       & 3/1590.5/156461         & 3334.0         & 3/115.0/4785            & 215.7          & 2769                                                \\
-youtube     & 1/3.0/9070              & 30.4           & 2/4.0/2217              & 14.6           & 105                                                 \\
-\hline
-
-\end{tabular}
+		            & min/median/max                           & mean                                     & min/median/max                                       & mean  & \multicolumn{1}{l}{} \\
+		\hline
+		\hline
+		amazon      & 3/20.0/900                               & 39.8                                     & 3/8.0/328                                            & 13.5  & 31                   \\
+		dblp        & 7/21.0/22699                             & 69.1                                     & 6/8.0/7556                                           & 22.4  & 54                   \\
+		livejournal & 3/100.0/84155                            & 570.5                                    & 3/16.0/1441                                          & 27.8  & 145                  \\
+		orkut       & 3/1590.5/156461                          & 3334.0                                   & 3/115.0/4785                                         & 215.7 & 2769                 \\
+		youtube     & 1/3.0/9070                               & 30.4                                     & 2/4.0/2217                                           & 14.6  & 105                  \\
+		\hline
+	\end{tabular}
 
 
 \end{table}
