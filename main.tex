@@ -57,7 +57,7 @@ We used graph-tool~\cite{graph-tool} to optimize for minimum description length 
 	\centering
 	\begin{subfloat}
 		\centering
-		\includegraphics[width=\textwidth]{nested_sbm_conn.eps}
+		\includegraphics[width=0.9\textwidth]{nested_sbm_conn.eps}
 	\end{subfloat}
 	% \begin{subfloat}
 	% 	\centering
@@ -76,11 +76,7 @@ We used graph-tool~\cite{graph-tool} to optimize for minimum description length 
 	\centering
 	\begin{subfloat}
 		\centering
-		\includegraphics[width=0.4\textwidth]{fig4a.pdf}
-	\end{subfloat}
-	\begin{subfloat}
-		\centering
-		\includegraphics[width=0.4\textwidth]{fig4b.pdf}
+		\includegraphics[width=0.9\textwidth]{nested_sbm_compar.eps}
 	\end{subfloat}
 	\caption{Connectivity Comparison:
 		On the non-bipartite empirical networks (85).
@@ -133,11 +129,11 @@ dnc,uni_email,polblogs,faa_routes,netscience,new_zealand_collab
 
 \begin{figure}[!htpb]
 	\centering
-	\includegraphics[width=\textwidth]{figures/pysbm_disc.pdf}
+	\includegraphics[width=0.9\textwidth]{figures/pysbm_conn_all.eps}
 	\caption[]{
 		\textbf{Connectivity of PySBM on medium empirical non-bipartite networks}
 		Each subfigure shows the connectivity of three PySBM inference algorithms on each (non-nested) SBM variant.
-		The nested versions are ommitted because PySBM only HPAH can run on a nested partition.
+		The nested versions are omitted because PySBM only HPAH can run on a nested partition.
 		For all models besides SCP, DCPU, and DCPUH (where we used the blocks in graph-tool), we used the same number of blocks for PySBM as in chosen-SBM.
 		We used the 10 smallest datasets in the medium empriical datasets, from 906 to 2115 nodes.
 		DiscFrequency is the proportion of non-singleton clusters that are disconnected.
@@ -147,14 +143,14 @@ dnc,uni_email,polblogs,faa_routes,netscience,new_zealand_collab
 
 \begin{figure}[!htpb]
 	\centering
-	\includegraphics[width=\textwidth]{figures/pysbm_v_graph_tool_flat.eps}
+	\includegraphics[width=0.9\textwidth]{figures/pysbm_v_graph_tool_flat.eps}
 	% \includegraphics[width=0.9\textwidth]{figures/pysbm_v_graph_tool_nested.pdf}
 	\caption[]{
 		\textbf{Comparison of PySBM against graph-tool on medium empirical non-bipartite networks}
-		The first two rows compare the entropy and disconnected frequencies on non-nested models.%, and the next two rows compare on nested models.
-		We used the same number of blocks for PySBM as in graph-tool.% (but not the number of layers in the nested case).
-		We calculate the description length according to each model and report RelEntropy normalized with dividing by graph-tool's clustering.
-		DiscFrequency is the proportion of non-singleton clusters that are disconnected.
+		The first two rows compare the entropy and disconnected frequencies on non-nested models. %, and the next two rows compare on nested models.
+		We used the same number of blocks for PySBM (KL, MHA, PAH) as in graph-tool (gt). % (but not the number of layers in the nested case).
+		Left: We calculate the description length according to each model normalized with dividing by graph-tool's description length. 
+		Right: We calculate the percentage of non-singleton clusters that are disconnected.
 		We see that a worse description length is consistent with more disconnected clusters.
 	}
 	\label{fig:comparison_flat.pdf}
