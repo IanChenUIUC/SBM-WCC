@@ -1,0 +1,149 @@
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[]{figures/accuracy_choose_lower.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Analysis on the Youtube Graph with Varying Ground-truth Cluster Inclusion Thresholds (keep lowest cluster id)} Here we show the results obtained by clustering the Youtube graph with chosen SBM+WCC, Leiden optimizing for modularity and processed with CM and WCC, and Leiden optimizing for CPM at r=0.01 and processed with CM and WCC. Only those ground-truth clusters with size greater than 10 was used. If a node had multiple memberships, it was assigned to the cluster with the smallest cluster id and stripped of its membership in all other clusters, thus making the ground-truth clustering disjoint. Each ground-truth cluster in the Youtube graph was assigned a noise score computed by the ratio of its external degree to total degree. For all sub figures, the x-axis marks the threshold such that only those ground-truth clusters with noise level less than the threshold is included. Consequently, clustering accuracies such as NMI, ARI, AGRI, RMI, and AMI are only computed on the reduced set of ground-truth clusters, ignoring any nodes not part of those clusters. Figure at the top left shows how many nodes remain in the set of ground-truth clusters following this thresholding step. Figure out the bottom left shows the distribution of cluster noise at different thresholds. The subfigures on the right show the clustering accuracies of all methods against each of the ground-truths thresholded at 0.1, 0.2, ..., 1.0. }
+	\label{fig:youtube-accuracy-choose-lower}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[]{figures/accuracy_remove_overlap.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Analysis on the Youtube Graph with Varying Ground-truth Cluster Inclusion Thresholds (remove overlap cluster id)} Here we show the results obtained by clustering the Youtube graph with chosen SBM+WCC, Leiden optimizing for modularity and processed with CM and WCC, and Leiden optimizing for CPM at r=0.01 and processed with CM and WCC. Only those ground-truth clusters with size greater than 10 was used. If a node had multiple memberships, it was simply removed from the ground-truth clustering, thus making the ground-truth clustering disjoint. Each ground-truth cluster in the Youtube graph was assigned a noise score computed by the ratio of its external degree to total degree. For all sub figures, the x-axis marks the threshold such that only those ground-truth clusters with noise level less than the threshold is included. Consequently, clustering accuracies such as NMI, ARI, AGRI, RMI, and AMI are only computed on the reduced set of ground-truth clusters, ignoring any nodes not part of those clusters. Figure at the top left shows how many nodes remain in the set of ground-truth clusters following this thresholding step. Figure out the bottom left shows the distribution of cluster noise at different thresholds. The subfigures on the right show the clustering accuracies of all methods against each of the ground-truths thresholded at 0.1, 0.2, ..., 1.0. }
+	\label{fig:youtube-accuracy-remove-overlap}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[]{figures/youtube_ground_truth_stats.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Empirical Statistics on Youtube Ground-truth Clusterings} We show the distributions over all the non-singleton clusters of conductance, modularity, normalized mincut size, density, and mixing parameter for the two different ways of creating a disjoint ground-truth partition for the ground-truth clusters of the Youtube graph. Density here is calculated by $\frac{2m}{n(n-1)}$ where $m$ is the number of edges inside the cluster and $n$ is the number of nodes inside the cluster. Mixing parameter here is computed by dividing the sum of external degree by sum of total degree over all nodes in a cluster. The ground-truth clusters, for both ways of processing the original ground-truth clustering, exhibit high conductance, low modularity, low normalized mincut sizes, low density, and high mixing parameters, indicating that the ground-truth clusters don't have good separability, are sparse, and have poor internal connectivity. High conductance and mixing parameter indicate low separability, low modularity and density indicate high sparsity, and low normalized mincut sizes indicate poor connectivity.}
+	\label{fig:youtube-ground-truth-stats}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[]{figures/choose_lower_youtube_sbm_accuracy.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of SBM and SBM-WCC} Only showing SBM vs SBM-WCC. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
+	\label{fig:choose-lower-sbm}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[]{figures/choose_lower_youtube_leiden_mod_accuracy.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of Leiden optimizing for modularity and its treatments} Only showing Leiden-mod vs Leiden-mod+WCC vs Leiden-mod+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
+	\label{fig:choose-lower-leiden-mod}
+\end{figure}
+
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[]{figures/choose_lower_youtube_leiden_cpm_accuracy.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of Leiden optimizing for CPM and its treatments}Only showing Leiden-CPM(r=0.01) vs Leiden-CPM(r=0.01)+WCC vs Leiden-CPM(r=0.01)+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
+	\label{fig:choose-lower-leiden-cpm}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[]{figures/remove_overlap_youtube_sbm_accuracy.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of SBM and SBM-WCC} Only showing SBM vs SBM-WCC. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
+	\label{fig:remove-overlap-sbm}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[]{figures/remove_overlap_youtube_leiden_mod_accuracy.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of Leiden optimizing for modularity and its treatments} Only showing Leiden-mod vs Leiden-mod+WCC vs Leiden-mod+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
+	\label{fig:remove-overlap-leiden-mod}
+\end{figure}
+
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[]{figures/remove_overlap_youtube_leiden_cpm_accuracy.pdf}
+	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of Leiden optimizing for CPM and its treatments}Only showing Leiden-CPM(r=0.01) vs Leiden-CPM(r=0.01)+WCC vs Leiden-CPM(r=0.01)+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
+	\label{fig:remove-overlap-leiden-cpm}
+\end{figure}
+
+\section{Results on SNAP networks: all clusters}
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/filter_youtube_output.pdf}
+	\caption[]{\textbf{Cluster statistics of ``Filter Small Clusters then Remove Multi-membership Nodes'' youtube ground-truth clustering binned by noise} }
+	\label{fig:4x}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/filter_youtube_just_cluster_size.pdf}
+	\caption[]{\textbf{Cluster size distribution of ``Filter Small Clusters then Remove Multi-membership Nodes'' youtube ground-truth clustering binned by noise} }
+	\label{fig:5x}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/filter_youtube_just_cluster_num.pdf}
+	\caption[]{\textbf{Number of clusters of ``Filter Small Clusters then Remove Multi-membership Nodes'' youtube ground-truth clustering binned by noise} }
+	\label{fig:6x}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/filter_youtube_just_mixing_param.pdf}
+	\caption[]{\textbf{Mixing parameter distribution over nodes of ``Filter Small Clusters then Remove Multi-membership Nodes'' youtube ground-truth clustering binned by noise} }
+	\label{fig:7x}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/remove_youtube_output.pdf}
+	\caption[]{\textbf{Cluster statistics of ``Remove Multi-membership Nodes'' youtube ground-truth clustering binned by noise} }
+	\label{fig:8x}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/remove_youtube_just_cluster_size.pdf}
+	\caption[]{\textbf{Cluster size distribution of ``Remove Multi-membership Nodes'' youtube ground-truth clustering binned by noise} }
+	\label{fig:9x}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/remove_youtube_just_cluster_num.pdf}
+	\caption[]{\textbf{Number of clusters of ``Remove Multi-membership Nodes'' youtube ground-truth clustering binned by noise} }
+	\label{fig:10x}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/remove_youtube_just_mixing_param.pdf}
+	\caption[]{\textbf{Mixing parameter distribution over nodes of ``Remove Multi-membership Nodes'' youtube ground-truth clustering binned by noise} }
+	\label{fig:11x}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/remove_sbm_accuracy.pdf}
+	\caption[]{\textbf{Impact of Treatment on Clustering Accuracy of SBM on the ``Remove Multi-membership Nodes'' youtube ground-truth clustering thresholded by noise} }
+	\label{fig:12x}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/remove_leiden_accuracy.pdf}
+	\caption[]{\textbf{Impact of Treatment on Clustering Accuracy of Leiden optimizing Modularity on the ``Remove Multi-membership Nodes'' youtube ground-truth clustering thresholded by noise} }
+	\label{fig:13x}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/filter_sbm_accuracy.pdf}
+	\caption[]{\textbf{Impact of Treatment on Clustering Accuracy of SBM on the ``Filter Small Clusters then Remove Multi-membership Nodes'' youtube ground-truth clustering thresholded by noise} }
+	\label{fig:14x}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/filter_leiden_accuracy.pdf}
+	\caption[]{\textbf{Impact of Treatment on Clustering Accuracy of Leiden optimizing Modularity on the ``Filter Small Clusters then Remove Multi-membership Nodes'' youtube ground-truth clustering thresholded by noise} }
+	\label{fig:15x}
+\end{figure}

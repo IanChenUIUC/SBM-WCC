@@ -1,8 +1,14 @@
-\documentclass[aps,pre,superscriptaddress]{revtex4}
+
+
+
+\documentclass[aps,pre,superscriptaddress]{article}
+
 \usepackage{xcolor}
 \usepackage{preamble}
 \usepackage{color}
 \usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{url}
 \graphicspath{ {./figures} }
 
 \begin{document}
@@ -11,8 +17,8 @@
 % \end{abstract}
 
 \title{SBM-WCC Ian's Document}
-\author{Ian Chen}
-\noaffiliation
+\author{Ian Chen and others}
+%\noaffiliation
 \date{\today}
 \maketitle
 
@@ -99,7 +105,7 @@ Where is no statistical difference between the percentage of disconnected cluste
 Here, we give a brief overview of other SBM models and inference algorithms, and investigate their runtime and connectivity.
 See ~\cite{funke19-04} for a more in-depth discussion of the variants that does not mention connectivity nor runtime.
 
-\subsection*{Models}
+\subsection{Models}
 
 The main variants of SBM are the degree corrected and non-degree corrected SBM models for flat and also hierarchical.
 Here, we use the microcanonical formulation~\cite{peixoto17-01}~\cite{peixoto14-03}.
@@ -110,7 +116,7 @@ Since this is a subclass of the other models, here we do not investigate it furt
 We follow the naming convention in ~\cite{funke19-04}.
 See the formulas in \ref{sbm-formulas}.
 
-\subsection*{Inference Algorithms}
+\subsection{Inference Algorithms}
 
 Inferring the number of blocks and optimizing the partition given a number of blocks is difficult to do exactly.
 Above, we investigated Peixoto's Agglomerative Heuristic~\cite{peixoto14-01}, which starts with a set of singleton clusters and merges them.
@@ -118,7 +124,8 @@ In addition, there is the Kernighan-Lin algorithm~\cite{kernighan70-02} which st
 
 TODO: something about dcd
 
-\subsection*{Results}
+\clearpage
+\subsection{Results on PySBM}
 
 Datasets (10 smallest in the medium list, by node count -- 906 to 2115 nodes):
 empirical:
@@ -144,98 +151,150 @@ dnc,uni_email,polblogs,faa_routes,netscience,new_zealand_collab
 \begin{figure}[!htpb]
 	\centering
 	\includegraphics[width=0.9\textwidth]{figures/pysbm_v_graph_tool_flat.pdf}
-	\includegraphics[width=0.9\textwidth]{figures/pysbm_v_graph_tool_nested.pdf}
+	% \includegraphics[width=0.9\textwidth]{figures/pysbm_v_graph_tool_nested.pdf}
 	\caption[]{
 		\textbf{Comparison of PySBM against graph-tool on medium empirical non-bipartite networks}
-        The first two rows compare the entropy and disconnected frequencies on non-nested models, and the next two rows compare on nested models.
-        We used the same number of blocks for PySBM as in graph-tool (but not the number of layers in the nested case).
+        The first two rows compare the entropy and disconnected frequencies on non-nested models.%, and the next two rows compare on nested models.
+        We used the same number of blocks for PySBM as in graph-tool.% (but not the number of layers in the nested case).
         We calculate the description length according to each model and report RelEntropy normalized with dividing by graph-tool's clustering.
         DiscFrequency is the proportion of non-singleton clusters that are disconnected.
         We see that a worse description length is consistent with more disconnected clusters.
 	}
 	\label{fig:comparison_flat.pdf}
 \end{figure}
-\section{Results}
+
+\clearpage
+\section{Results on Synthetic Networks}
 
 \begin{figure}[!htpb]
 	\centering
-	\includegraphics[]{figures/accuracy_box.pdf}
-	\caption[]{\textbf{Clustering accuracy on LFR and RECCS synthetic networks}  Each subfigure shows the results on five different clustering accuracy metrics (NMI, ARI, AGRI, RMI, and AMI). The biggest differences in accuracies come from ARI, AGRI, and RMI, where chosen SBM + WCC has the best accuracy followed by chosen SBM and then hierarchical SBM. On NMI and AMI, although there may be a slight advantage to using chosen SBM + WCC, the accuracy differences across the different methods were small.}
+	\includegraphics[width=0.9\textwidth]{figures/accuracy_box.pdf}
+	\caption[]{\textbf{Clustering accuracy on LFR and RECCS synthetic networks}  Each subfigure shows the results on five different clustering accuracy metrics (NMI, ARI, AGRI, RMI, and AMI). The biggest differences in accuracies come from ARI, AGRI, and RMI, where chosen SBM + WCC has the best accuracy followed by chosen SBM and then hierarchical SBM. On NMI and AMI, although there may be a slight advantage to using chosen SBM + WCC, the accuracy differences across the different methods were small. Notes: SBM+WCC timeout on cit\_patents-0.5(LFR), SBM+WCC oom on wiki\_topcats-0.01(RECCS), and nested SBM oom on oc-0.001(LFR). Data only shown for those datasets where all methods completed successfully. Total of 27 networks.}
 	\label{fig:synthetic-accuracy}
 \end{figure}
 
 \begin{figure}[!htpb]
 	\centering
-	\includegraphics[]{figures/conn_box.pdf}
-	\caption[]{\textbf{Proportion of disconnected clusters produced by Hierarchical SBM and Chosen SBM on synthetic LFR and RECCS networks}  We see that hierarchical SBM tends to produce clusterings with higher proportions of disconnectd clusters than chosen SBM on these synthetic networks.}
+	\includegraphics[width=0.9\textwidth]{figures/conn_box.pdf}
+	\caption[]{\textbf{Proportion of disconnected clusters produced by Hierarchical SBM and Chosen SBM on synthetic LFR and RECCS networks}  We see that hierarchical SBM tends to produce clusterings with higher proportions of disconnectd clusters than chosen SBM on these synthetic networks. Notes: SBM+WCC timeout on cit\_patents-0.5(LFR), SBM+WCC oom on wiki\_topcats-0.01(RECCS), and nested SBM oom on oc-0.001(LFR). Data only shown for those datasets where all methods completed successfully. Total of 27 synthetic networks.}
 	\label{fig:synthetic-connectivity}
 \end{figure}
 %Minhyuk: write down how many networks 
 
 \begin{figure}[!htpb]
 	\centering
-	\includegraphics[]{figures/accuracy_choose_lower.pdf}
-	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Analysis on the Youtube Graph with Varying Ground-truth Cluster Inclusion Thresholds (keep lowest cluster id)} Here we show the results obtained by clustering the Youtube graph with chosen SBM+WCC, Leiden optimizing for modularity and processed with CM and WCC, and Leiden optimizing for CPM at r=0.01 and processed with CM and WCC. Only those ground-truth clusters with size greater than 10 was used. If a node had multiple memberships, it was assigned to the cluster with the smallest cluster id and stripped of its membership in all other clusters, thus making the ground-truth clustering disjoint. Each ground-truth cluster in the Youtube graph was assigned a noise score computed by the ratio of its external degree to total degree. For all sub figures, the x-axis marks the threshold such that only those ground-truth clusters with noise level less than the threshold is included. Consequently, clustering accuracies such as NMI, ARI, AGRI, RMI, and AMI are only computed on the reduced set of ground-truth clusters, ignoring any nodes not part of those clusters. Figure at the top left shows how many nodes remain in the set of ground-truth clusters following this thresholding step. Figure out the bottom left shows the distribution of cluster noise at different thresholds. The subfigures on the right show the clustering accuracies of all methods against each of the ground-truths thresholded at 0.1, 0.2, ..., 1.0. }
-	\label{fig:youtube-accuracy-choose-lower}
+	\includegraphics[width=0.9\textwidth]{figures/density_dblp_accuracy.pdf}
+	\caption[]{\textbf{Various Clustering Accuracies for Varying Density Levels on the DBLP SNAP real-world network with ground-truth}}
+	\label{fig:density-dblp-accuracy}
 \end{figure}
 
 \begin{figure}[!htpb]
 	\centering
-	\includegraphics[]{figures/accuracy_remove_overlap.pdf}
-	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Analysis on the Youtube Graph with Varying Ground-truth Cluster Inclusion Thresholds (remove overlap cluster id)} Here we show the results obtained by clustering the Youtube graph with chosen SBM+WCC, Leiden optimizing for modularity and processed with CM and WCC, and Leiden optimizing for CPM at r=0.01 and processed with CM and WCC. Only those ground-truth clusters with size greater than 10 was used. If a node had multiple memberships, it was simply removed from the ground-truth clustering, thus making the ground-truth clustering disjoint. Each ground-truth cluster in the Youtube graph was assigned a noise score computed by the ratio of its external degree to total degree. For all sub figures, the x-axis marks the threshold such that only those ground-truth clusters with noise level less than the threshold is included. Consequently, clustering accuracies such as NMI, ARI, AGRI, RMI, and AMI are only computed on the reduced set of ground-truth clusters, ignoring any nodes not part of those clusters. Figure at the top left shows how many nodes remain in the set of ground-truth clusters following this thresholding step. Figure out the bottom left shows the distribution of cluster noise at different thresholds. The subfigures on the right show the clustering accuracies of all methods against each of the ground-truths thresholded at 0.1, 0.2, ..., 1.0. }
-	\label{fig:youtube-accuracy-remove-overlap}
+	\includegraphics[width=0.9\textwidth]{figures/noise_dblp_accuracy.pdf}
+	\caption[]{\textbf{Various Clustering Accuracies for Varying Noise Levels on the DBLP SNAP real-world network with ground-truth}}
+	\label{fig:noise-dblp-accuracy}
 \end{figure}
 
 \begin{figure}[!htpb]
 	\centering
-	\includegraphics[]{figures/youtube_ground_truth_stats.pdf}
-	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}Empirical Statistics on Youtube Ground-truth Clusterings} We show the distributions over all the non-singleton clusters of conductance, modularity, normalized mincut size, density, and mixing parameter for the two different ways of creating a disjoint ground-truth partition for the ground-truth clusters of the Youtube graph. Density here is calculated by $\frac{2m}{n(n-1)}$ where $m$ is the number of edges inside the cluster and $n$ is the number of nodes inside the cluster. Mixing parameter here is computed by dividing the sum of external degree by sum of total degree over all nodes in a cluster. The ground-truth clusters, for both ways of processing the original ground-truth clustering, exhibit high conductance, low modularity, low normalized mincut sizes, low density, and high mixing parameters, indicating that the ground-truth clusters don't have good separability, are sparse, and have poor internal connectivity. High conductance and mixing parameter indicate low separability, low modularity and density indicate high sparsity, and low normalized mincut sizes indicate poor connectivity.}
-	\label{fig:youtube-ground-truth-stats}
+	\includegraphics[width=0.9\textwidth]{figures/density_livejournal_accuracy.pdf}
+	\caption[]{\textbf{Various Clustering Accuracies for Varying Density Levels on the Livejournal SNAP real-world network with ground-truth}}
+	\label{fig:density-livejournal-accuracy}
 \end{figure}
 
 \begin{figure}[!htpb]
 	\centering
-	\includegraphics[]{figures/choose_lower_youtube_sbm_accuracy.pdf}
-	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of SBM and SBM-WCC} Only showing SBM vs SBM-WCC. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
-	\label{fig:choose-lower-sbm}
+	\includegraphics[width=0.9\textwidth]{figures/noise_livejournal_accuracy.pdf}
+	\caption[]{\textbf{Various Clustering Accuracies for Varying Noise Levels on the Livejournal SNAP real-world network with ground-truth}}
+	\label{fig:noise-livejournal-accuracy}
 \end{figure}
 
 \begin{figure}[!htpb]
 	\centering
-	\includegraphics[]{figures/choose_lower_youtube_leiden_mod_accuracy.pdf}
-	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of Leiden optimizing for modularity and its treatments} Only showing Leiden-mod vs Leiden-mod+WCC vs Leiden-mod+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
-	\label{fig:choose-lower-leiden-mod}
-\end{figure}
-
-
-\begin{figure}[!htpb]
-	\centering
-	\includegraphics[]{figures/choose_lower_youtube_leiden_cpm_accuracy.pdf}
-	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Choose Lower'' Ground-truth Clustering Accuracy of Leiden optimizing for CPM and its treatments}Only showing Leiden-CPM(r=0.01) vs Leiden-CPM(r=0.01)+WCC vs Leiden-CPM(r=0.01)+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-choose-lower}.}
-	\label{fig:choose-lower-leiden-cpm}
+	\includegraphics[width=0.9\textwidth]{figures/density_youtube_accuracy.pdf}
+	\caption[]{\textbf{Various Clustering Accuracies for Varying Density Levels on the Youtube SNAP real-world network with ground-truth}}
+	\label{fig:denisty-youtube-accuracy}
 \end{figure}
 
 \begin{figure}[!htpb]
 	\centering
-	\includegraphics[]{figures/remove_overlap_youtube_sbm_accuracy.pdf}
-	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of SBM and SBM-WCC} Only showing SBM vs SBM-WCC. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
-	\label{fig:remove-overlap-sbm}
-\end{figure}
-
-\begin{figure}[!htpb]
-	\centering
-	\includegraphics[]{figures/remove_overlap_youtube_leiden_mod_accuracy.pdf}
-	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of Leiden optimizing for modularity and its treatments} Only showing Leiden-mod vs Leiden-mod+WCC vs Leiden-mod+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
-	\label{fig:remove-overlap-leiden-mod}
+	\includegraphics[width=0.9\textwidth]{figures/noise_youtube_accuracy.pdf}
+	\caption[]{\textbf{Various Clustering Accuracies for Varying Noise Levels on the Youtube SNAP real-world network with ground-truth}}
+	\label{fig:noise-youtube-accuracy}
 \end{figure}
 
 
 \begin{figure}[!htpb]
 	\centering
-	\includegraphics[]{figures/remove_overlap_youtube_leiden_cpm_accuracy.pdf}
-	\caption[]{\textbf{\textcolor{red}{Wrong data. redo.}``Remove Overlap'' Ground-truth Clustering Accuracy of Leiden optimizing for CPM and its treatments}Only showing Leiden-CPM(r=0.01) vs Leiden-CPM(r=0.01)+WCC vs Leiden-CPM(r=0.01)+CM. Detailed caption in Figure \ref{fig:youtube-accuracy-remove-overlap}.}
-	\label{fig:remove-overlap-leiden-cpm}
+	\includegraphics[width=0.9\textwidth]{figures/density_amazon_accuracy.pdf}
+	\caption[]{\textbf{Various Clustering Accuracies for Varying Density Levels on the Amazon SNAP real-world network with ground-truth}}
+	\label{fig:density-amazon-acuracy}
 \end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/noise_amazon_accuracy.pdf}
+	\caption[]{\textbf{Various Clustering Accuracies for Varying Noise Levels on the Amazon SNAP real-world network with ground-truth}}
+	\label{fig:noise-amazon-acuracy}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/density_orkut_accuracy.pdf}
+	\caption[]{\textbf{Various Clustering Accuracies for Varying Density Levels on the Orkut SNAP real-world network with ground-truth}}
+	\label{fig:density-orkut-acuracy}
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/noise_orkut_accuracy.pdf}
+	\caption[]{\textbf{Various Clustering Accuracies for Varying Noise Levels on the Orkut SNAP real-world network with ground-truth}}
+	\label{fig:noise-orkut-acuracy}
+\end{figure}
+
+\clearpage
+
+
+\newpage
+\section{Results on SNAP networks: top 5000 clusters}
+
+
+This next section has the results on SNAP networks, when we restrict attention to the top 5000 clusters.
+
+\begin{table}[!htpb]
+\caption{\textbf{Cluster statistics of the top 5000 clusters of SNAP networks}}
+\begin{tabular}{lcrcrr}
+\hline
+dataset     & \multicolumn{2}{c}{\# edges per cluster} & \multicolumn{2}{c}{\# nodes per cluster} & \multicolumn{1}{c}{\# clusters (n \textgreater 100)} \\
+\hline
+
+            & min/median/max          & mean           & min/median/max          & mean           & \multicolumn{1}{l}{}                                \\
+\hline
+\hline
+amazon      & 3/20.0/900              & 39.8           & 3/8.0/328               & 13.5           & 31                                                  \\
+dblp        & 7/21.0/22699            & 69.1           & 6/8.0/7556              & 22.4           & 54                                                  \\
+livejournal & 3/100.0/84155           & 570.5          & 3/16.0/1441             & 27.8           & 145                            \\
+orkut       & 3/1590.5/156461         & 3334.0         & 3/115.0/4785            & 215.7          & 2769                                                \\
+youtube     & 1/3.0/9070              & 30.4           & 2/4.0/2217              & 14.6           & 105                                                 \\
+\hline
+
+\end{tabular}
+
+
+\end{table}
+
+\clearpage
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/snap_groundtruth_top_5000_stats.pdf}
+	\caption[]{\textbf{Network and Cluster Statistics for Top 5000 Ground-truth Clusters for the SNAP Collection} Top left: Number of edges and nodes in the network. Top center: Average of the mixing parameters across all nodes in the network and the node coverage of top-5000 ground-truth clusters. Top right: Distribution of edge and node counts over clusters of ground-truth. Bottom left: Distribution of conductance, density, and modularity over clusters of ground-truth. Bottom right: Distribution of normalized mincut sizes over clusters of ground-truth Red horizontal line indicates y=1, which is the threshold for well-connectedness.}
+	\label{fig:XXX}
+\end{figure}
+
+
+
+
 
 \clearpage
 \section{Formulas for cluster statistics}
@@ -351,7 +410,7 @@ The external degree of a node $v_{i} \in c$ is $k_{v_{i}\_{out}}=|\{e_{ij} :v_{j
 \section{Description Length Formulas}
 \label{sbm-formulas}
 
-\subsection*{Microcanonical Non-Degree Corrected (SPC)}
+\subsection{Microcanonical Non-Degree Corrected (SPC)}
 
 Let $A$ be the adjacency matrix, $\vb{e}$ the edge matrix between blocks, and $\vb{b}$ the block assignments.
 We optimize for minimum description length $\Sigma_{spc} = -\log_2P(A, \vb{e}, \vb{b}) = -\log_2 P(A \mid \vb{e}, \vb{b}) - \log_2 P(\vb{e} \mid \vb{b}) - \log_2 P(\vb{b})$, where
@@ -368,7 +427,7 @@ In graph-tool, this corresponds to the parameters
     BlockState(g, b, deg_corr=False).entropy()
 \end{verbatim}
 
-\subsection*{Microcanonical Degree Corrected (DCPU)}
+\subsection{Microcanonical Degree Corrected (DCPU)}
 
 Let $A$ be the adjacency matrix, $\vb{e}$ the edge matrix between blocks, $\vb{k}$ the degree vector (per node), and $\vb{b}$ the block assignments (per node).
 We optimize for minimum description length $\Sigma_{dpcu} = -\log_2P(A, \vb{k}, \vb{e}, \vb{b}) = -\log_2P(A \mid \vb{k}, \vb{e}, \vb{b}) - \log_2 P(\vb{k} \mid \vb{e}, \vb{b}) - \log_2 P(\vb{e} \mid \vb{b}) - \log_2 P(\vb{b}) $, where
@@ -386,7 +445,7 @@ In graph-tool, this corresponds to the parameters
     BlockState(g, b, deg_corr=False, entropy_args={ degree_dl_kind = "uniform" }).entropy()
 \end{verbatim}
 
-\subsection*{Microcanonical Degree Corrected (DCPUH)}
+\subsection{Microcanonical Degree Corrected (DCPUH)}
 
 Let $A$ be the adjacency matrix, $\vb{e}$ the edge matrix between blocks, $\vb{k}$ the degree vector (per node), and $\vb{b}$ the block assignments (per node).
 We optimize for minimum description length $\Sigma_{dpcuh} = -\log_2P(A, \vb{k}, \vb{e}, \vb{b}) = -\log_2P(A \mid \vb{k}, \vb{e}, \vb{b}) - \log_2 P(\vb{k} \mid \vb{e}, \vb{b}) - \log_2 P(\vb{e} \mid \vb{b}) - \log_2 P(\vb{b}) $, where
@@ -414,7 +473,7 @@ In graph-tool, this corresponds to the parameters
     BlockState(g, b, deg_corr=False, entropy_args={ degree_dl_kind = "distributed" }).entropy()
 \end{verbatim}
 
-\subsection*{Microcanonical Non-Degree Corrected (HSPC)}
+\subsection{Microcanonical Non-Degree Corrected (HSPC)}
 
 Let $A$ be the adjacency matrix, $\vb{e}$ the edge matrix between blocks, and $\vb{b}$ the block assignments.
 We optimize for minimum description length $\Sigma_{hspc} = -\log_2P(A, \vb{e}, \vb{b}) = -\log_2 P(A \mid \vb{e}, \vb{b}) - \log_2 P(\vb{e} \mid \vb{b}) - \log_2 P(\vb{b})$, where
@@ -431,7 +490,7 @@ In graph-tool, this corresponds to the parameters
     NestedBlockState(g, b, deg_corr=False).entropy()
 \end{verbatim}
 
-\subsection*{Microcanonical Degree Corrected (HDCPU)}
+\subsection{Microcanonical Degree Corrected (HDCPU)}
 
 Let $A$ be the adjacency matrix, $\vb{e}$ the edge matrix between blocks, $\vb{k}$ the degree vector (per node), and $\vb{b}$ the block assignments (per node).
 We optimize for minimum description length $\Sigma_{hdpcu} = -\log_2P(A, \vb{k}, \vb{e}, \vb{b}) = -\log_2P(A \mid \vb{k}, \vb{e}, \vb{b}) - \log_2 P(\vb{k} \mid \vb{e}, \vb{b}) - \log_2 P(\vb{e} \mid \vb{b}) - \log_2 P(\vb{b}) $, where
@@ -449,7 +508,7 @@ In graph-tool, this corresponds to the parameters
     NestedBlockState(g, b, deg_corr=False, entropy_args={ degree_dl_kind = "uniform" }).entropy()
 \end{verbatim}
 
-\subsection*{Microcanonical Degree Corrected (HDCPUH)}
+\subsection{Microcanonical Degree Corrected (HDCPUH)}
 
 Let $A$ be the adjacency matrix, $\vb{e}$ the edge matrix between blocks, $\vb{k}$ the degree vector (per node), and $\vb{b}$ the block assignments (per node).
 We optimize for minimum description length $\Sigma_{hdpcuh} = -\log_2P(A, \vb{k}, \vb{e}, \vb{b}) = -\log_2P(A \mid \vb{k}, \vb{e}, \vb{b}) - \log_2 P(\vb{k} \mid \vb{e}, \vb{b}) - \log_2 P(\vb{e} \mid \vb{b}) - \log_2 P(\vb{b}) $, where
