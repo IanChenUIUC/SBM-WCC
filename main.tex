@@ -27,10 +27,14 @@ See the preprint~\cite{Park25-02}.
 
 \section{Materials and Methods}
 
+\subsection{Empirical}
 We used 122 networks --- 120 networks from the Netzschleuder network catalogue~\cite{Netzschleuder} and two other networks from ~\cite{Park24-11}.
 The networks range in size, from 11 to 13,989,436 nodes, and 13 to 117,185,083 edges.
 
 We used graph-tool~\cite{graph-tool} to optimize for minimum description length (MDL) of the degree-corrected flat and nested models.
+
+\subsection{Synthetic}
+We used 27 LFR networks, in the public domain~\cite{park24-11}. We also generated 3 RECCS.
 
 \section{Nested-SBM on Empirical Networks}
 
@@ -158,6 +162,57 @@ dnc,uni_email,polblogs,faa_routes,netscience,new_zealand_collab
 
 \clearpage
 \section{Results on Synthetic Networks}
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/estimated_accuracy_leidenmod.pdf}
+    \caption[]{\textbf{Accuracy on EC-SBM x Leiden-Mod:} We show clustering accuracy on 40 EC-SBM networks, generated using Leiden-Mod input clusterings. Each row shows a different accuracy metric, and each column shows a different estimation method. Leiden is run with resolution value 0.001. We see that treatment never helps. }
+\end{figure}
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/estimated_accuracy_leiden1.pdf}
+    \caption[]{\textbf{Accuracy on EC-SBM x Leiden(0.1):} We show clustering accuracy on 40 EC-SBM networks, generated using Leiden(0.1) input clusterings. Each row shows a different accuracy metric, and each column shows a different estimation method. Leiden is run with resolution value 0.001. We see that treatment always helps, except for AGRI. }
+\end{figure}
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/estimated_accuracy_leiden01.pdf}
+    \caption[]{\textbf{Accuracy on EC-SBM x Leiden(0.01):} We show clustering accuracy on 40 EC-SBM networks, generated using Leiden(0.01) input clusterings. Each row shows a different accuracy metric, and each column shows a different estimation method. Leiden is run with resolution value 0.001. We see that treatment always helps, except for AGRI. }
+\end{figure}
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/estimated_accuracy_sbm.pdf}
+    \caption[]{\textbf{Accuracy on EC-SBM x SBM+CC:} We show clustering accuracy on 40 EC-SBM networks, generated using Chosen-Flat SBM+CC input clusterings. Each row shows a different accuracy metric, and each column shows a different estimation method. Leiden is run with resolution value 0.001. We see that treatment always helps, except for on AGRI. Moreover, CC is always better or neutral than WCC. }
+\end{figure}
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/node_coverage_ecsbm.pdf}
+    \caption[]{\textbf{Node Coverage of EC-SBM estimated and groundtruth clusterings:} Each row shows a different set of 40 networks based on the input clustering method, and each column shows a different estimation method (or ground truth). Leiden is run with resolution value 0.001. }
+\end{figure}
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/node_coverage_threshold.pdf}
+    \caption[]{\textbf{Node Coverage of EC-SBM groundtruth clusterings:} Each row shows a different set of 70 networks based on the input clustering method. We consider only groundtruth nodes with noise (extdegree / totdegree) less than noise, and remove clusters of size less than 10. We see that even with a threshold of 0.50, leidenmod clusters still have high node coverage, compare to the other input methods. }
+\end{figure}
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/threshold_acc_leiden.1.pdf}
+    \caption[]{\textbf{AMI Accuracy on thresholded EC-SBM groundtruth clusterings:} Each row shows the AMI value on 70 EC-SBM networks based Leiden(0.1). We consider only groundtruth nodes with noise (extdegree / totdegree) less than noise, and remove clusters of size less than 10. We see that even on the lowest noise threshold, treatment is bad. Leiden refers to Leiden(0.001) }
+\end{figure}
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/threshold_acc_leidenmod.pdf}
+    \caption[]{\textbf{AMI Accuracy on thresholded EC-SBM groundtruth clusterings:} Each row shows the AMI value on 70 EC-SBM networks based Leiden-Mod. We consider only groundtruth nodes with noise (extdegree / totdegree) less than noise, and remove clusters of size less than 10. We see that even on the lowest noise threshold, treatment is bad. Leiden refers to Leiden(0.001)}
+\end{figure}
+
+
+
 
 \begin{figure}[!htpb]
 	\centering

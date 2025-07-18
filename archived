@@ -147,3 +147,30 @@
 	\caption[]{\textbf{Impact of Treatment on Clustering Accuracy of Leiden optimizing Modularity on the ``Filter Small Clusters then Remove Multi-membership Nodes'' youtube ground-truth clustering thresholded by noise} }
 	\label{fig:15x}
 \end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/ecsbm_acc.pdf}
+	\caption[]{\textbf{Clustering Accuracy:}
+    Each subfigure shows the accuracy value of Chosen-SBM and Leiden-CPM with and without treatment, on 74 EC-SBM networks. The EC-SBM networks are based on the Leiden-Mod clusterings on (74) medium non-bipartite networks. }
+\end{figure}
+
+\begin{figure}[!htpb]
+	\centering
+	\includegraphics[width=0.9\textwidth]{figures/ecsbm_stats.pdf}
+	\caption[]{\textbf{Clustering stats:}
+    Each subfigure shows the stat value on 74 EC-SBM networks. The x-axis are the 74 networks, sorted by the EC-SBM value (blue). TThe EC-SBM networks are based on the Leiden-Mod clusterings on (74) medium non-bipartite networks. EC-SBM is the ground-truth, Chosen-SBM and Chosen-SBM+CC are the estimated clusterings. The median SBM+CC cluster size is almost always 2, and so the median SBM+CC edge cut is almost always $1 / \log_{10}(2) \approx 3.2$ }
+\end{figure}
+
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/network_cluster_size_leiden.1.pdf}
+    \caption[]{\textbf{Chosen-Flat SBM mean cluster size across EC-SBM x Leiden(0.1) networks:} Each point represents a clustering on a network of given size. There are 40 networks, based upon Leiden(0.1) clusterings. The y-axis is the mean cluster size of that clustering, excluding singleton clusters. We color code each clustering method, and the ground truth.}
+\end{figure}
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/network_cluster_size_leidenmod.pdf}
+    \caption[]{\textbf{Chosen-Flat SBM mean cluster size across EC-SBM x Leiden-Mod networks:} Each point represents a clustering on a network of given size. There are 40 networks, based upon Leiden-Mod clusterings. The y-axis is the mean cluster size of that clustering, excluding singleton clusters. We color code each clustering method, and the ground truth.}
+\end{figure}
