@@ -1,6 +1,3 @@
-
-
-
 \documentclass[aps,pre,superscriptaddress]{article}
 
 \usepackage{xcolor}
@@ -9,6 +6,7 @@
 \usepackage{verbatim}
 \usepackage{graphicx}
 \usepackage{url}
+\usepackage{listings}
 \graphicspath{ {./figures} }
 
 \begin{document}
@@ -27,77 +25,49 @@ See the preprint~\cite{Park25-02}.
 
 \section{Materials and Methods}
 
-\subsection{Empirical}
-We used 122 networks --- 120 networks from the Netzschleuder network catalogue~\cite{Netzschleuder} and two other networks from ~\cite{Park24-11}.
-The networks range in size, from 11 to 13,989,436 nodes, and 13 to 117,185,083 edges.
+\subsection{Software}
 
-We used graph-tool~\cite{graph-tool} to optimize for minimum description length (MDL) of the degree-corrected flat and nested models.
+\subsubsection*{Chosen SBM}
+
+We primarily use the graph-tool~\cite{graph-tool} software to infer stochastic block models (SBM).
+They fit an SBM by minimizing description length (MDL).
+
+We have two procedures for fitting an SBM model, which we call Chosen-Flat and Chosen-Nested SBM --- see the appendix for the commands:
+\begin{enumerate}
+    \item Fit three SBM models: PP, DC-Flat, and Non-DC-Flat; pick the one with smallest description length
+    \item Fit two SBM models: DC-Nested and Non-DC-Nested; pick the one with smallest description length
+\end{enumerate}
+
+\subsubsection*{PySBM}
+
+We also ran experiments with the PySBM software~\cite{funke19-04}.
+They implement other SBM variants.
+
+\subsubsection*{Leiden}
+
+We also used Leiden~\cite{traag19-03} to generate clusters.
+Leiden can optimize for the Constant Potts Model (CPM) or Modularity (Mod).
+
+\subsection{Datasets}
+
+\subsubsection*{Empirical}
+
+We used 74 empirical non-bipartite networks from the Netzschleuder network catalogue~\cite{Netzschleuder}.
+We treat each network as undirected.
+These range from 906 to 1.4 million nodes.
 
 \subsection{Synthetic}
-We used 27 LFR networks, in the public domain~\cite{park24-11}. We also generated 3 RECCS.
 
-\section{Nested-SBM on Empirical Networks}
+We generated 308 synthetic networks using EC-SBM~\cite{vule25-02} based on the 74 empirical networks above.
+For each of the 74 networks, we clustered it with Leiden or graph-tool using one of the following four methods:
+\begin{enumerate}
+    \item Leiden optimizing CPM with resolution 0.1
+    \item Leiden optimizing CPM with resolution 0.01
+    \item Leiden optimizing Mod
+    \item Chosen-SBM with CC treatment
+\end{enumerate}
 
-\begin{figure}
-	\centering
-	\begin{subfloat}
-		\centering
-		\includegraphics[width=0.48\textwidth]{fig1.pdf}
-	\end{subfloat}
-	\begin{subfloat}
-		\centering
-		\includegraphics[width=0.48\textwidth]{fig2.pdf}
-	\end{subfloat}
-	\caption{Entropy and Clusters across Hierarchical-SBM Levels:
-		On all empirical networks (120).
-		For each plot, we take the mean across all networks with MaxLevels number of inferred levels.
-		Left: The description length is calculated according to the Degree Corrected (non-nested) SBM model.
-		Right: The number of clusters (log scale).
-	}
-	\label{figs:fig1}
-\end{figure}
-
-\begin{figure}[ht]
-	\centering
-	\begin{subfloat}
-		\centering
-		\includegraphics[width=0.9\textwidth]{nested_sbm_conn.eps}
-	\end{subfloat}
-	% \begin{subfloat}
-	% 	\centering
-	% 	\includegraphics[width=0.8\textwidth]{fig3c.pdf}
-	% \end{subfloat}
-	\caption{
-		Connectivity of Hierarchical-SBM Clusters.
-		On the non-bipartite empirical networks (85).
-		Each bar is a network, sorted in increasing network size.
-		The y-axis shows percentage disconnected, poorly connected, and well-connected
-	}
-	\label{figs:nested_sbm_conn}
-\end{figure}
-
-\begin{figure}[ht]
-	\centering
-	\begin{subfloat}
-		\centering
-		\includegraphics[width=0.9\textwidth]{nested_sbm_compar.eps}
-	\end{subfloat}
-	\caption{Connectivity Comparison:
-		On the non-bipartite empirical networks (85).
-		The x-axis indicates the method.
-		Left: Proportion of clusters that are disconnected.
-		Right: Proportion of clusters that are poorly-connected (including disconnected).
-	}
-	\label{figs:fig3}
-\end{figure}
-
-On average, the best layer by itself (via description length) is Layer 0 (Figure \ref{figs:fig1}).
-Moreover, on all the 120 empirical networks (except for petster), the layer with the lowest description length (compared to the other layers) is Layer 0 --- on petster, it was layer 4 (out of 10 layers).
-
-We conducted paired t-tests to test whether there are differences in the connectivity between nested and flat degree-corrected SBM models.
-Where is no statistical difference between the percentage of disconnected clusters (p = 0.5264), but there was a difference in the well-connected proportions (p = 0.0193), with flat having better connectivity.
-
-\section{Other SBMs}
+\section{PySBM}
 
 Here, we give a brief overview of other SBM models and inference algorithms, and investigate their runtime and connectivity.
 See ~\cite{funke19-04} for a more in-depth discussion of the variants that does not mention connectivity nor runtime.
@@ -110,8 +80,8 @@ In addition, closed formulas have been derived that speed up the calculation of 
 Finally, there are SBM models that specialize on disassociative structures in bipartite graphs~\cite{yen20-09}.
 Since this is a subclass of the other models, here we do not investigate it further.
 
-We follow the naming convention in ~\cite{funke19-04}.
-See the formulas in \ref{sbm-formulas}.
+We follow the naming convention in~\cite{funke19-04}.
+See the formulas in~\ref{sbm-formulas}.
 
 \subsection{Inference Algorithms}
 
@@ -119,10 +89,7 @@ Inferring the number of blocks and optimizing the partition given a number of bl
 Above, we investigated Peixoto's Agglomerative Heuristic~\cite{peixoto14-01}, which starts with a set of singleton clusters and merges them.
 In addition, there is the Kernighan-Lin algorithm~\cite{kernighan70-02} which starts with a random partition and does a local search through node moves.
 
-TODO: something about dcd
-
-\clearpage
-\subsection{Results on PySBM}
+\subsection{Results}
 
 Datasets (10 smallest in the medium list, by node count -- 906 to 2115 nodes):
 empirical:
@@ -161,7 +128,40 @@ dnc,uni_email,polblogs,faa_routes,netscience,new_zealand_collab
 \end{figure}
 
 \clearpage
-\section{Results on Synthetic Networks}
+\section{Nested SBM on Empirical}
+
+\begin{figure}[ht]
+	\centering
+	\begin{subfloat}
+		\centering
+		\includegraphics[width=0.9\textwidth]{figures/empirical_connectivity_unchosen_cluster.pdf}
+	\end{subfloat}
+	\caption{
+        \textbf{Connectivity of Nested and Flat SBM Clusters}.
+        On medium empirical non-bipartite networks.
+		Each bar is a network, sorted in increasing network size.
+		The y-axis shows, among the non-singleton clusters, the percentage of disconnected, poorly connected, and well-connected clusters.
+	}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\begin{subfloat}
+		\centering
+		\includegraphics[width=0.9\textwidth]{figures/empirical_connectivity_unchosen_node.pdf}
+	\end{subfloat}
+	\caption{
+        \textbf{Connectivity of Nested and Flat SBM Clusters}.
+        On medium empirical non-bipartite networks.
+		Each bar is a network, sorted in increasing network size.
+        The y-axis shows, among the nodes in non-singleton clusters, the percentage of nodes in disconnected, poorly connected, and well-connected clusters.
+	}
+\end{figure}
+ 
+\clearpage
+\section{SBM and Treatment on Synthetic}
+
+See section~\ref{command-threshold} and~\ref{command-cluster} for commands on running the methods and computing accuracy on thresholded clusters by noise and density.
 
 \begin{figure}[!htpb]
     \centering
@@ -201,18 +201,78 @@ dnc,uni_email,polblogs,faa_routes,netscience,new_zealand_collab
 
 \begin{figure}[!htpb]
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/threshold_acc_leiden.1.pdf}
-    \caption[]{\textbf{AMI Accuracy on thresholded EC-SBM groundtruth clusterings:} Each row shows the AMI value on 70 EC-SBM networks based Leiden(0.1). We consider only groundtruth nodes with noise (extdegree / totdegree) less than noise, and remove clusters of size less than 10. We see that even on the lowest noise threshold, treatment is bad. Leiden refers to Leiden(0.001) }
+    \includegraphics[width=0.9\textwidth]{figures/noise_acc_leiden.1.pdf}
+    \caption[]{\textbf{Accuracy on noise thresholded EC-SBM x Leiden(0.1):} 
+        Each column shows the accuracy values on 70 EC-SBM networks based Leiden(0.1). 
+        We consider only nodes that are in a groundtruth cluster of size at least $1$ or $10$ respectively for each row.
+        Similarly, we consider only nodes that are in a groundtruth cluster with noise (external degree / total degree) less than the threshold, i.e. increasing cluster quality from left to right. }
 \end{figure}
 
 \begin{figure}[!htpb]
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/threshold_acc_leidenmod.pdf}
-    \caption[]{\textbf{AMI Accuracy on thresholded EC-SBM groundtruth clusterings:} Each row shows the AMI value on 70 EC-SBM networks based Leiden-Mod. We consider only groundtruth nodes with noise (extdegree / totdegree) less than noise, and remove clusters of size less than 10. We see that even on the lowest noise threshold, treatment is bad. Leiden refers to Leiden(0.001)}
+    \includegraphics[width=0.9\textwidth]{figures/density_acc_leiden.1.pdf}
+    \caption[]{\textbf{Accuracy on density thresholded EC-SBM x Leiden(0.1):} 
+        Each column shows the accuracy values on 70 EC-SBM networks based Leiden(0.1). 
+        We consider only nodes that are in a groundtruth cluster of size at least $1$ or $10$ respectively for each row.
+        Similarly, we consider only nodes that are in a groundtruth cluster with density (2m / n(n-1) ) greater than the threshold , i.e. increasing cluster quality from left to right. }
 \end{figure}
 
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/noise_acc_leiden.01.pdf}
+    \caption[]{\textbf{Accuracy on noise thresholded EC-SBM x Leiden(0.01):} 
+        Each column shows the accuracy values on 70 EC-SBM networks based Leiden(0.01). 
+        We consider only nodes that are in a groundtruth cluster of size at least $1$ or $10$ respectively for each row.
+        Similarly, we consider only nodes that are in a groundtruth cluster with noise (external degree / total degree) less than the threshold, i.e. increasing cluster quality from left to right. }
+\end{figure}
 
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/density_acc_leiden.01.pdf}
+    \caption[]{\textbf{Accuracy on density thresholded EC-SBM x Leiden(0.01):} 
+        Each column shows the accuracy values on 70 EC-SBM networks based Leiden(0.01). 
+        We consider only nodes that are in a groundtruth cluster of size at least $1$ or $10$ respectively for each row.
+        Similarly, we consider only nodes that are in a groundtruth cluster with density (2m / n(n-1) ) greater than the threshold , i.e. increasing cluster quality from left to right. }
+\end{figure}
 
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/noise_acc_leidenmod.pdf}
+    \caption[]{\textbf{Accuracy on noise thresholded EC-SBM x Leiden-Mod:} 
+        Each column shows the accuracy values on 70 EC-SBM networks based Leiden-Mod. 
+        We consider only nodes that are in a groundtruth cluster of size at least $1$ or $10$ respectively for each row.
+        Similarly, we consider only nodes that are in a groundtruth cluster with noise (external degree / total degree) less than the threshold, i.e. increasing cluster quality from left to right. }
+\end{figure}
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/density_acc_leidenmod.pdf}
+    \caption[]{\textbf{Accuracy on density thresholded EC-SBM x Leiden-Mod:} 
+        Each column shows the accuracy values on 70 EC-SBM networks based Leiden-Mod. 
+        We consider only nodes that are in a groundtruth cluster of size at least $1$ or $10$ respectively for each row.
+        Similarly, we consider only nodes that are in a groundtruth cluster with density (2m / n(n-1) ) greater than the threshold , i.e. increasing cluster quality from left to right. }
+\end{figure}
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/noise_acc_sbm.pdf}
+    \caption[]{\textbf{Accuracy on noise thresholded EC-SBM x Chosen-Flat+CC:} 
+        Each column shows the accuracy values on 70 EC-SBM networks based Chosen-Flat+CC. 
+        We consider only nodes that are in a groundtruth cluster of size at least $1$ or $10$ respectively for each row.
+        Similarly, we consider only nodes that are in a groundtruth cluster with noise (external degree / total degree) less than the threshold, i.e. increasing cluster quality from left to right. }
+\end{figure}
+
+\begin{figure}[!htpb]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/density_acc_sbm.pdf}
+    \caption[]{\textbf{Accuracy on density thresholded EC-SBM x Chosen-Flat+CC:} 
+        Each column shows the accuracy values on 70 EC-SBM networks based Chosen-Flat+CC. 
+        We consider only nodes that are in a groundtruth cluster of size at least $1$ or $10$ respectively for each row.
+        Similarly, we consider only nodes that are in a groundtruth cluster with density (2m / n(n-1) ) greater than the threshold , i.e. increasing cluster quality from left to right. }
+\end{figure}
+
+\clearpage
+\section{LFR and RECCS}
 
 \begin{figure}[!htpb]
 	\centering
@@ -227,7 +287,11 @@ dnc,uni_email,polblogs,faa_routes,netscience,new_zealand_collab
 	\caption[]{\textbf{Proportion of disconnected clusters produced by Hierarchical SBM and Chosen SBM on synthetic LFR and RECCS networks}  We see that hierarchical SBM tends to produce clusterings with higher proportions of disconnectd clusters than chosen SBM on these synthetic networks. Notes: SBM+WCC timeout on cit\_patents-0.5(LFR), SBM+WCC oom on wiki\_topcats-0.01(RECCS), and nested SBM oom on oc-0.001(LFR). Data only shown for those datasets where all methods completed successfully. Total of 27 synthetic networks.}
 	\label{fig:synthetic-connectivity}
 \end{figure}
-%Minhyuk: write down how many networks 
+
+\clearpage
+\section{Results on SNAP networks: top 5000 clusters}
+
+This next section has the results on SNAP networks, when we restrict attention to the top 5000 clusters.
 
 \begin{figure}[!htpb]
 	\centering
@@ -300,15 +364,6 @@ dnc,uni_email,polblogs,faa_routes,netscience,new_zealand_collab
 	\label{fig:noise-orkut-acuracy}
 \end{figure}
 
-\clearpage
-
-
-\newpage
-\section{Results on SNAP networks: top 5000 clusters}
-
-
-This next section has the results on SNAP networks, when we restrict attention to the top 5000 clusters.
-
 \begin{table}[!htpb]
 	\caption{\textbf{Cluster statistics of the top 5000 clusters of SNAP networks}}
 	\begin{tabular}{lcrcrr}
@@ -326,11 +381,7 @@ This next section has the results on SNAP networks, when we restrict attention t
 		youtube     & 1/3.0/9070                               & 30.4                                     & 2/4.0/2217                                           & 14.6  & 105                  \\
 		\hline
 	\end{tabular}
-
-
 \end{table}
-
-\clearpage
 
 \begin{figure}[!htpb]
 	\centering
@@ -338,10 +389,6 @@ This next section has the results on SNAP networks, when we restrict attention t
 	\caption[]{\textbf{Network and Cluster Statistics for Top 5000 Ground-truth Clusters for the SNAP Collection} Top left: Number of edges and nodes in the network. Top center: Average of the mixing parameters across all nodes in the network and the node coverage of top-5000 ground-truth clusters. Top right: Distribution of edge and node counts over clusters of ground-truth. Bottom left: Distribution of conductance, density, and modularity over clusters of ground-truth. Bottom right: Distribution of normalized mincut sizes over clusters of ground-truth Red horizontal line indicates y=1, which is the threshold for well-connectedness.}
 	\label{fig:XXX}
 \end{figure}
-
-
-
-
 
 \clearpage
 \section{Formulas for cluster statistics}
@@ -358,10 +405,6 @@ The sum of all node degrees in cluster $c$ is $k_{c} = \sum_{v_{i} \in c}{degree
 Similarly, we can define $k_{c_{in}} = 2|\{e_{ij} : v_{i} \in c \text{ and } v_{j} \in c \text{ and } i \neq j\}|$ and $k_{c_{out}} = |\{e_{ij} : v_{i} \in c \text { and } v_{j} \notin c \text{ and } i \neq j\}|$
 
 % $E_{cut}=\{e_{ij} : v_{i}\in c \text{ and } v_{j} \notin c \ \text{ and } i \neq j\}$
-
-
-
-
 
 \vspace{.1in}
 \textcolor{red}{Tandy's comments follow. }
@@ -453,6 +496,127 @@ The external degree of a node $v_{i} \in c$ is $k_{v_{i}\_{out}}=|\{e_{ij} :v_{j
 % \caption[]{\textbf{}}
 % \label{fig:}
 % \end{figure}
+
+\section{Commands}
+
+\subsection{Clustering}
+\label{command-cluster}
+
+The codes \verb+run_flat_sbm.py+, \verb+run_nested_sbm.py+, \verb+chosen_flat.py+, and \verb+chosen_nested.py+ can be found at \url{https://github.com/illinois-or-research-analytics/network-analysis-code}, commit ac9af43.
+Otherwise, \verb+constrained_clustering+ is at \url{https://github.com/MinhyukPark/constrained-clustering}, release v1.1.0.
+Otherwise, \verb+cm_pipeline+ is at \url{https://github.com/illinois-or-research-analytics/cm_pipeline}, release v4.0.1.
+
+\begin{lstlisting}[language=Python]
+if method in ["DC-Flat", "NDC-Flat", "PP-Flat"]:
+    model = method.split("-")[0].replace("NDC", "Non-DC") + "-SBM"
+    return [
+        "/usr/bin/time", "-v", "python",
+        "run_flat_sbm.py",
+        "--input-network", network,
+        "--inner-sbm-model", model,
+        "--output-prefix", <>,
+        "--output-clustering", <>,
+        "--num-processors", f"{num_processors}",
+    ]
+elif method in ["DC-Nested", "NDC-Nested"]:
+    model = method.split("-")[0].replace("NDC", "Non-DC") + "-SBM"
+    return [
+        "/usr/bin/time", "-v", "python",
+        "run_nested_sbm.py",
+        "--input-network", network,
+        "--inner-sbm-model", model,
+        "--output-prefix", <>,
+        "--output-clustering", <>,
+        "--num-processors", f"{num_processors}"
+    ]
+elif method == "Leiden":
+    return [
+        "/usr/bin/time", "-v",
+        "python", 
+        "cm_pipeline/scripts/run_leiden.py",
+        "-i", network,
+        "-r", "0.001",
+        "-o", <>,
+        "-n", "2"
+    ]
+elif method == "Chosen-Nested":
+    return [
+        "/usr/bin/time", "-v",
+        "python",
+        "chosen_nested.py",
+        "--dataset", dataset,
+        "--name", name,
+    ]
+elif method == "Chosen-Flat":
+    return [
+        "/usr/bin/time", "-v",
+        "python",
+        "chosen_flat.py",
+        "--dataset", dataset,
+        "--name", name,
+    ]
+elif "+CC" in method:
+    return [
+        "/usr/bin/time", "-v",
+        "constrained_clustering", 
+        "MincutOnly",
+        "--edgelist", network,
+        "--existing-clustering", <>,
+        "--output-file", <>,
+        "--log-file", <>,
+        "--connectedness-criterion", "0",
+        "--log-level", "1"
+    ]
+elif "+WCC" in method:
+    return [
+        "/usr/bin/time", "-v",
+        "constrained_clustering", 
+        "MincutOnly",
+        "--edgelist", network,
+        "--existing-clustering", <>,
+        "--output-file", <>,
+        "--log-file", <>,
+        "--connectedness-criterion", "1",
+        "--log-level", "1"
+    ]
+elif "+CM" in method:
+    return [
+        "/usr/bin/time", "-v",
+        "python", "-m",
+        "hm01.cm",
+        "-i", network,
+        "-e", <>,
+        "-o", <>,
+        "-c", "leiden",
+        "-g", "0.001",
+        "--threshold", "1log10",
+        "--nprocs", f"{num_processors}"
+    ]
+\end{lstlisting}
+
+\subsection{Noise and Density}
+\label{command-threshold}
+
+The codes can be found at \url{https://github.com/illinois-or-research-analytics/network-analysis-code}, commit ac9af43.
+\begin{lstlisting}
+python analysis_threshold/noise.py \
+    --network <network> \
+    --cluster <cluster> \
+    --outfile <output>
+
+python analysis_threshold/noise.py \
+    --network <network> \
+    --cluster <cluster> \
+    --outfile <output>
+
+python analysis_threshold/accuracy.py \
+    --network <network> \
+    --gt_cluster <noise-output or density-output> \
+    --et_cluster <cluster> \
+    --output <output> \
+    --greater <True for density, False for noise> \
+    --minsize <1 or 10>
+\end{lstlisting}
 
 \section{Description Length Formulas}
 \label{sbm-formulas}
